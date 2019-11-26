@@ -73,9 +73,7 @@
         totalDevice = 4000;
 
         mounted() {
-            let _ = this;
-            _.fetchDevices('world').then(() => _.fetchMap('world')).then(() => this.loadDataByType());
-
+            this.loadDataByType()
         }
 
         @Watch('dataType')
@@ -84,13 +82,18 @@
         }
 
         loadDataByType(type: number = 0) {
+            let _ = this, data = '';
             this.isMounted = false;
+
             switch (type) {
                 case 1:
                     this.projection = 'world';
+                    data = 'world_lg';
+                    this.radius = 50;
                     break;
                 case 2:
                     this.projection = 'us';
+                    data = 'us';
                     this.radius = 5;
                     this.deviceZoomLevel = 50;
                     this.totalDevice = 1000;
@@ -99,22 +102,25 @@
                 default:
                     this.projection = 'world';
                     this.totalDevice = 1000;
+                    this.radius = 50;
+                    data = 'world';
                     break;
             }
-
-            const worldMap = this.map;
-            const devices = this.parseData(this.listDevice);
-            const links = this.fakeLinks(devices);
-            const hulls = this.fakeHulls(devices);
-            this.mapSVG = {
-                fill: 'lightgray',
-                stroke: 'white',
-                d: worldMap,
-            };
-            this.deviceCollection = devices;
-            this.edgeCollection = links;
-            this.networkCollection = hulls;
-            this.isMounted = true;
+            _.fetchDevices(data).then(() => _.fetchMap(this.projection)).then(() => {
+                const worldMap = _.map;
+                const devices = _.parseData(_.listDevice);
+                const links = _.fakeLinks(devices);
+                const hulls = _.fakeHulls(devices);
+                this.mapSVG = {
+                    fill: 'lightgray',
+                    stroke: 'white',
+                    d: worldMap,
+                };
+                _.deviceCollection = devices;
+                _.edgeCollection = links;
+                _.networkCollection = hulls;
+                _.isMounted = true;
+            });
         }
 
 
