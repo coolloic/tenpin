@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex, {StoreOptions} from 'vuex';
 import {RootState} from "store/types";
-import {Devices} from "./devices/index";
+import {Topology} from "./topology/index";
 
 Vue.use(Vuex);
 const store: StoreOptions<RootState> = {
@@ -9,7 +9,7 @@ const store: StoreOptions<RootState> = {
     version: '1.0.0'
   },
   modules: {
-    Devices
+    Topology
   }
 };
 export default new Vuex.Store<RootState>(store);

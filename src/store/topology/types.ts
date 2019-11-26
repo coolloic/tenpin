@@ -1,5 +1,8 @@
-export const DEVICES_LOADED = 'devicesLoaded';
-export const DEVICES_ERROR = 'deviceError';
+export const FETCH_DEVICES = 'fetchDevices';
+export const FETCH_DEVICES_ERROR = 'fetchDevicesError';
+export const FETCH_MAP = 'fetchMap';
+export const FETCH_MAP_ERROR = 'fetchMapError';
+
 export class Device {
   cx?: number = 0;
   cy?: number = 0;
@@ -19,7 +22,8 @@ export class Device {
 }
 
 
-export interface DevicesState {
+export interface TopologyState {
   devices?: Device[];
   error: boolean;
+  map?: string;
 }

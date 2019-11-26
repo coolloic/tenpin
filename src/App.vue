@@ -15,22 +15,32 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import Vue from 'vue'
+    import {State, Action, Getter} from 'vuex-class';
+    import Component from 'vue-class-component'
     import * as d3 from 'd3';
     import Networks from '@/components/Networks.vue';
     import Device from '@/components/pojo/Device';
     import Network from '@/components/pojo/Network';
     import Edge from '@/components/pojo/Edge';
     import {Layer} from '@/components/pojo/Enums';
+    import {TopologyState} from 'store/topology/types';
 
+    const namespace: string = 'Topology';
 
     @Component({
         components: {
             Networks,
         },
     })
+
     export default class App extends Vue {
-        deviceCollection: Device[] = [];
+        @Getter('devices', {namespace}) listDevice: any;
+        @Getter('map', {namespace}) map!: string;
+        @Action('fetchMap', {namespace}) fetchMap: any;
+        @Action('fetchDevices', {namespace}) fetchDevices: any;
+
+        deviceCollection: any[] = [];
 
         edgeCollection: Edge[] = [];
 
@@ -62,29 +72,23 @@
         totalDevice = 4000;
 
         mounted() {
-            this.loadDataByType(0);
+            let _ = this;
+            _.fetchDevices().then(() => _.fetchMap()).then(() => this.loadDataByType());
+
         }
 
-        @Watch('dataType')
+        // @Watch('dataType')
         onDataTypeChanged(value: any, oldValue: any) {
             this.loadDataByType(parseInt(value));
         }
 
-        loadDataByType(type: number) {
+        loadDataByType(type: number = 0) {
             this.isMounted = false;
-            let mapUrl;
-            let
-                dataUrl;
             switch (type) {
                 case 1:
-                    mapUrl = 'https://loic-web-app.s3-ap-southeast-2.amazonaws.com/world-110m.geojson';
-                    dataUrl = 'https://loic-web-app.s3-ap-southeast-2.amazonaws.com/ne_10m_populated_places_simple.geojson';
                     this.projection = 'world';
                     break;
                 case 2:
-                    // mapUrl = 'https://loic-web-app.s3-ap-southeast-2.amazonaws.com/world-110m.geojson';
-                    mapUrl = 'https://loic-web-app.s3-ap-southeast-2.amazonaws.com/us-states.json';
-                    dataUrl = 'https://loic-web-app.s3-ap-southeast-2.amazonaws.com/us_cities.geojson';
                     this.projection = 'us';
                     this.radius = 5;
                     this.deviceZoomLevel = 50;
@@ -92,27 +96,24 @@
                     break;
                 case 0:
                 default:
-                    mapUrl = 'https://loic-web-app.s3-ap-southeast-2.amazonaws.com/world-110m.geojson';
-                    dataUrl = 'https://loic-web-app.s3-ap-southeast-2.amazonaws.com/ne_50m_populated_places_simple.geojson';
                     this.projection = 'world';
                     this.totalDevice = 1000;
                     break;
             }
-            this.loadMap(mapUrl, dataUrl, (result: any[]) => {
-                const worldMap = result[0];
-                const devices = this.parseData(result[1]);
-                const links = this.fakeLinks(devices);
-                const hulls = this.fakeHulls(devices);
-                this.mapSVG = {
-                    fill: 'lightgray',
-                    stroke: 'white',
-                    d: worldMap,
-                };
-                this.deviceCollection = devices;
-                this.edgeCollection = links;
-                this.networkCollection = hulls;
-                this.isMounted = true;
-            });
+
+            const worldMap = this.map;
+            const devices = this.parseData(this.listDevice);
+            const links = this.fakeLinks(devices);
+            const hulls = this.fakeHulls(devices);
+            this.mapSVG = {
+                fill: 'lightgray',
+                stroke: 'white',
+                d: worldMap,
+            };
+            this.deviceCollection = devices;
+            this.edgeCollection = links;
+            this.networkCollection = hulls;
+            this.isMounted = true;
         }
 
 
