@@ -2,5 +2,6 @@ import {TopologyState} from "./types";
 
 export const state: TopologyState = {
   devices: undefined,
-  error: false
+  error: false,
+  map: undefined
 };

@@ -17,6 +17,7 @@
 <script lang="ts">
     import Vue from 'vue'
     import {State, Action, Getter} from 'vuex-class';
+    import {Watch} from 'vue-property-decorator';
     import Component from 'vue-class-component'
     import * as d3 from 'd3';
     import Networks from '@/components/Networks.vue';
@@ -73,11 +74,11 @@
 
         mounted() {
             let _ = this;
-            _.fetchDevices().then(() => _.fetchMap()).then(() => this.loadDataByType());
+            _.fetchDevices('world').then(() => _.fetchMap('world')).then(() => this.loadDataByType());
 
         }
 
-        // @Watch('dataType')
+        @Watch('dataType')
         onDataTypeChanged(value: any, oldValue: any) {
             this.loadDataByType(parseInt(value));
         }
