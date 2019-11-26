@@ -95,7 +95,7 @@
                     mapUrl = 'https://loic-web-app.s3-ap-southeast-2.amazonaws.com/world-110m.geojson';
                     dataUrl = 'https://loic-web-app.s3-ap-southeast-2.amazonaws.com/ne_50m_populated_places_simple.geojson';
                     this.projection = 'world';
-                    this.totalDevice = 100;
+                    this.totalDevice = 1000;
                     break;
             }
             this.loadMap(mapUrl, dataUrl, (result: any[]) => {
