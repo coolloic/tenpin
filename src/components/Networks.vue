@@ -82,7 +82,8 @@
           :network="network"
           :node-visible="isDeviceVisibleToScale"
           :click-callback='openNetworkById'
-          :close-callback="closeNetworkById")
+          :close-callback="closeNetworkById"
+          :drag-callback="dragNetworkCallback")
         template(v-for="bundle in edges")
           BaseLinkItem(
             v-if="false && isEdgeVisibleToScale && isDeviceVisibleToScale && isLayerVisible[edge.layer] && edge.visible && edge.filtered"
@@ -124,8 +125,10 @@
 <!--Node(:cx="device.cx" :cy="device.cy" :r="r" :stroke-width="strokeWidth" :key="device.id" :font-size="fontSize" :text="device.text")-->
 <!--                        EventPie(:cx="device.cx" :cy="device.cy" :r="r" :stroke-width="strokeWidth" :key="device.id" :data="device.event" :font-size="fontSize" :text="device.text")-->
 <script lang="ts">
-  import * as d3 from 'd3';
-  import {Component, Prop, Vue, Watch,} from 'vue-property-decorator';
+  import {select, brush, zoomIdentity, zoom, geoPath, scaleLinear, geoAlbersUsa, geoNaturalEarth1,
+    schemeCategory10, selectAll, event, polygonHull, polygonCentroid} from 'd3';
+  import Vue from 'vue';
+  import {Component, Prop, Watch,} from 'vue-property-decorator';
   import VueTagsInput from '@johmun/vue-tags-input';
   import Supercluster from "supercluster";
   import BaseDeviceNode from '@/components/basic/BaseDeviceNode.vue';
@@ -168,7 +171,7 @@
     autocompleteItems = [];
     currentScale: number = 1;
     currentTranslate: any;
-    active: any = d3.select(null);
+    active: any = select(null);
     scaleExtent: number = 1;
     entrySet: any = {};
     enableBrush: boolean = false;
@@ -186,7 +189,7 @@
     isDeviceVisibleToScale: boolean = false;
     isEdgeVisibleToScale: boolean = false;
     isNetworkVisibleToScale: boolean = false;
-    brush = d3.brush();
+    brush = brush();
     selectedDevices = [];
     selectedNetworks = [];
     expandedNetworks: any[] = [];
@@ -238,11 +241,11 @@
     }
 
     get zoomIndentity() {
-      return d3.zoomIdentity;
+      return zoomIdentity;
     }
 
     get zoom(): any {
-      return d3.zoom().scaleExtent([this.zoomSettings.scaleMin, this.zoomSettings.scaleMax]);
+      return zoom().scaleExtent([this.zoomSettings.scaleMin, this.zoomSettings.scaleMax]);
     }
 
     // settings for lazy load edges and devices, text switch between counter and network name for network
@@ -284,15 +287,15 @@
     }
 
     get path() {
-      return d3.geoPath().projection(this.projection);
+      return geoPath().projection(this.projection);
     }
 
     get clusterScale() {
-      return d3.scaleLinear().domain([1, 90]).range([1, 15]);
+      return scaleLinear().domain([1, 90]).range([1, 15]);
     }
 
     get nodeSizeScale() {
-      return d3.scaleLinear().domain([1, 90]).range([8, 12]);
+      return scaleLinear().domain([1, 90]).range([8, 12]);
     }
 
     get zoomSettings() {
@@ -318,7 +321,7 @@
     }
 
     get projection() {
-      return this.projectionType == 'us' ? d3.geoAlbersUsa() : d3.geoNaturalEarth1();
+      return this.projectionType == 'us' ? geoAlbersUsa() : geoNaturalEarth1();
     }
 
     // insentive tag input comparation
@@ -337,69 +340,76 @@
       return data;
     }
 
+    populateDevice(d: Device, i: number, counter: number) {
+      // exclude the points which isn't belong this current projection
+      if (this.projection!(d.point)!) {
+        d.cx = d.cx || this.projection(d.point)![0];
+        d.cy = d.cy || this.projection(d.point)![1];
+        d.class = `${d.hulls!.join(' ')} ${d.active ? 'active' : ''}` || '';
+        d.r = d.r || 0.1;
+        d.fill = d.fill || this.c10(i);
+        d.fontSize = d.fontSize || 1;
+        d.visible = d.visible == null ? false : d.visible;
+        d.filtered = d.filtered == null ? true : d.filtered;
+        d.event = d.event || this.generateEvent();
+        this.entrySet[d.id!] = this.entrySet[d.id!] || d;
+        this.isDeviceFiltered(d);
+      } else {
+        counter++;
+      }
+      return counter;
+    }
+
     // return computed devices
     get devices() {
       const _ = this;
-      let
-        counter = 0;
+      let counter = 0;
       this.deviceCollection.map((d: Device, i: number) => {
-        // exclude the points which isn't belong this current projection
-        if (this.projection!(d.point)!) {
-          d.cx = d.cx || this.projection(d.point)![0];
-          d.cy = d.cy || this.projection(d.point)![1];
-          d.class = `${d.hulls!.join(' ')} ${d.active ? 'active' : ''}` || '';
-          d.r = d.r || 0.1;
-          d.fill = d.fill || this.c10(i);
-          d.fontSize = d.fontSize || 1;
-          d.visible = d.visible == null ? false : d.visible;
-          d.filtered = d.filtered == null ? true : d.filtered;
-          d.event = d.event || _.generateEvent();
-          _.entrySet[d.id!] = this.entrySet[d.id!] || d;
-          this.isDeviceFiltered(d);
-        } else {
-          counter++;
-        }
+        counter = _.populateDevice(d, i, counter);
       });
       this.validDevices = this.deviceCollection.length - counter;
       // console.log(`invalid edge ${counter}, valid edge ${this.deviceCollection.length}`);
       return this.deviceCollection;
     }
 
+    populateNetworks(n: Network, i: number, counter: number, scale: number) {
+      let path = this.networkPath(n);
+      // exclude the points which isn't belong this current projection
+      if (path && path.center) {
+        n.center = path.center || [0, 0];
+        n.toppoint = path.toppoint || [0, 0],
+          n.d = path.d || '';
+        n.stroke = this.c10(i);
+        n.fill = this.c10(i);
+        n.strokeWidth = n.strokeWidth! / scale || 20;
+        n.d0 = `M ${n.center[0]} ${n.center[1]} m ${-5 / scale} 0 a ${5 / scale} ${5 / scale} 0 0 0 ${10 / scale} 0 a ${5 / scale} ${5 / scale} 0 0 0 ${-10 / scale} 0` || '';
+        n.stroke = n.stroke || 'white';
+        n.fill = n.fill || 'white';
+        n.expanded = n.expanded == null ? false : n.expanded;
+        n.geometry = {
+          coordinates: this.projection.invert!(path.center!),
+        };
+        n.x = n.x || 0;
+        n.y = n.y || 0;
+        n.event = n.event || this.generateEvent();
+        n.counter = n.data!.length || 0;
+        n.filtered = n.filtered == null ? true : n.filtered;
+        n.highlight = n.highlight == null ? false : n.highlight;
+        n.points = path.points;
+        this.entrySet[n.id!] = this.entrySet[n.id!] || n;
+      } else {
+        counter++;
+      }
+      return counter;
+    }
+
     // return computed network
     get networks(): Network[] {
       const _ = this;
-      let path: any;
       const scale = this.currentScale / 1.5;
-      let
-        counter = 0;
+      let counter = 0;
       this.networkCollection.map((n: Network, i: number) => {
-        path = this.networkPath(n);
-        // exclude the points which isn't belong this current projection
-        if (path && path.center) {
-          n.center = path.center || [0, 0];
-          n.toppoint = path.toppoint || [0, 0],
-            n.d = path.d || '';
-          n.stroke = this.c10(i);
-          n.fill = this.c10(i);
-          n.strokeWidth = n.strokeWidth! / scale || 20;
-          n.d0 = `M ${n.center[0]} ${n.center[1]} m ${-5 / scale} 0 a ${5 / scale} ${5 / scale} 0 0 0 ${10 / scale} 0 a ${5 / scale} ${5 / scale} 0 0 0 ${-10 / scale} 0` || '';
-          n.stroke = n.stroke || 'white';
-          n.fill = n.fill || 'white';
-          n.expanded = n.expanded == null ? false : n.expanded;
-          n.geometry = {
-            coordinates: _.projection.invert!(path.center!),
-          };
-          n.x = n.x || 0;
-          n.y = n.y || 0;
-          n.event = n.event || _.generateEvent();
-          n.counter = n.data!.length || 0;
-          n.filtered = n.filtered == null ? true : n.filtered;
-          n.highlight = n.highlight == null ? false : n.highlight;
-          n.points = path.points;
-          _.entrySet[n.id!] = this.entrySet[n.id!] || n;
-        } else {
-          counter++;
-        }
+        counter = _.populateNetworks(n, i, counter, scale);
       });
       this.validNetworks = this.networkCollection.length - counter;
       // console.log(`invalid network ${counter}, valid network ${this.networkCollection.length}`);
@@ -434,43 +444,48 @@
       });
     }
 
+    populateEdge(e: Edge, counter: number) {
+      // exclude the points which isn't belong this current projection
+      if (this.projection(e.source!.point)! && this.projection(e.target!.point)!) {
+        const set = new Set<string>();
+        e.source!.hulls!.map((d: string) => {
+          if (d) set.add(d);
+        });
+        e.target!.hulls!.map((d: string) => {
+          if (d) set.add(d);
+        });
+        e.id = e.id || `${e.layer}__${e.source!.id}__${e.target!.id}`;
+        e.hulls = set;
+        e.class = `link ${e.source!.id} ${e.target!.id}`;
+        e.d = this.linkPath(e) || '';
+        e.arrow = `url(#arrow-${e.layer})`;
+        e.x1 = e.source!.cx || 0;
+        e.y1 = e.source!.cy || 0;
+        e.x2 = e.target!.cx || 0;
+        e.y2 = e.target!.cy || 0;
+        e.bidirectional = e.bidirectional || false;
+        e.strokeWidth = e.strokeWidth || 0.1;
+        e.icons = this.getIcons(e.layer!);
+        e.arrow = e.arrow || '';
+        e.visible = e.visible == null ? false : e.visible;
+        e.filtered = e.filtered == null ? true : e.filtered;
+        e.text = e.text || e.id;
+        this.entrySet[e.id] = this.entrySet[e.id] || e;
+        this.updateEdgeBundles(e);
+        this.isEdgeFiltered(e);
+      } else {
+        counter++;
+      }
+      return counter;
+    }
+
     // return computed edges
     get edges() {
       const _ = this;
       let
         counter = 0;
       this.edgeCollection.map((e: Edge) => {
-        // exclude the points which isn't belong this current projection
-        if (this.projection(e.source!.point)! && this.projection(e.target!.point)!) {
-          const set = new Set<string>();
-          e.source!.hulls!.map((d: string) => {
-            if (d) set.add(d);
-          });
-          e.target!.hulls!.map((d: string) => {
-            if (d) set.add(d);
-          });
-          e.id = e.id || `${e.layer}__${e.source!.id}__${e.target!.id}`;
-          e.hulls = set;
-          e.class = `link ${e.source!.id} ${e.target!.id}`;
-          e.d = this.linkPath(e) || '';
-          e.arrow = `url(#arrow-${e.layer})`;
-          e.x1 = e.source!.cx || 0;
-          e.y1 = e.source!.cy || 0;
-          e.x2 = e.target!.cx || 0;
-          e.y2 = e.target!.cy || 0;
-          e.bidirectional = e.bidirectional || false;
-          e.strokeWidth = e.strokeWidth || 0.1;
-          e.icons = _.getIcons(e.layer!);
-          e.arrow = e.arrow || '';
-          e.visible = e.visible == null ? false : e.visible;
-          e.filtered = e.filtered == null ? true : e.filtered;
-          e.text = e.text || e.id;
-          _.entrySet[e.id] = this.entrySet[e.id] || e;
-          _.updateEdgeBundles(e);
-          _.isEdgeFiltered(e);
-        } else {
-          counter++;
-        }
+        counter = _.populateEdge(e, counter);
       });
       this.validEdges = this.edgeCollection.length - counter;
       // console.log(`invalid edge ${counter}, valid edge ${this.edgeCollection.length}`);
@@ -478,7 +493,7 @@
     }
 
     // auto color panel
-    c10 = (i: number) => d3.schemeCategory10[i % 10];
+    c10 = (i: number) => schemeCategory10[i % 10];
 
     created() {
       // load networks to tags input auto suggestion
@@ -489,7 +504,7 @@
 
     mounted() {
       // register zoom behaviour
-      this.registerZoomBehaviour(d3.select('svg'));
+      this.registerZoomBehaviour(select('svg'));
       this.registerBrush();
       // set initClusters to null to load cluster view
       this.initClusters = null;
@@ -508,8 +523,8 @@
       }
 
       //  remove unfocused network opacity when zoom out
-      if (this.currentScale < this.deviceLevel && d3.select('.low-opacity')) {
-        d3.selectAll('.low-opacity').classed('low-opacity', false);
+      if (this.currentScale < this.deviceLevel && select('.low-opacity')) {
+        selectAll('.low-opacity').classed('low-opacity', false);
       }
     }
 
@@ -695,7 +710,7 @@
           break;
       }
       if (selector) {
-        d3.selectAll(selector).classed('highlight', highlight).attr('stroke-width', sw).attr('stroke-dasharray', sd);
+        selectAll(selector).classed('highlight', highlight).attr('stroke-width', sw).attr('stroke-dasharray', sd);
       }
     }
 
@@ -742,7 +757,7 @@
 
     zoomed(scale: number) {
       const translate = [0, 0];
-      d3.select('svg').transition()
+      select('svg').transition()
         .call(this.zoom.transform, this.zoomIndentity.translate(translate[0], translate[1]).scale(scale));
     }
 
@@ -753,8 +768,8 @@
       devices!.map((d: Device) => {
         d.cx! += x;
         d.cy! += y;
-        d3.select(`#${d.id} circle`).raise();
-        d3.select(`#${d.id} text`).raise();
+        select(`#${d.id} circle`).raise();
+        select(`#${d.id} text`).raise();
 
         this.freshAssociatedLinks(d);
         d.hulls!.map((h: string) => {
@@ -762,48 +777,39 @@
         });
       });
       hulls.forEach((id: any) => {
-        d3.select(`#${id} path`).attr('d', this.isDeviceVisibleToScale ? this.networkPath(this.entrySet[id])!.d : this.entrySet[id].d0);
+        select(`#${id} path`).attr('d', this.isDeviceVisibleToScale ? this.networkPath(this.entrySet[id])!.d : this.entrySet[id].d0);
       });
-      if (d3.event.sourceEvent) {
-        d3.event.sourceEvent.stopImmediatePropagation();
+      if (event.sourceEvent) {
+        event.sourceEvent.stopImmediatePropagation();
       }
     }
 
-    // network drag callback implementation
-    private registerNetworkDragBehaviour(selector: any) {
-      const _ = this;
-      // only update its child devices position, the child devices' parent hulls
-      d3.drag().on('drag', function () {
-        const network = d3.select(this)!;
-        const id = network.attr('id');
-        if (id) {
-          const x = d3.event.dx;
-          const y = d3.event.dy;
-          const net = _.entrySet[id];
-          if (net.multiSelected) {
-            const {length} = _.selectedNetworks;
-            _.selectedNetworks.map((id: string, i: number) => {
-              const n = _.entrySet[id];
-              if (n.multiSelected) {
-                _.relayoutNetwork(n, x, y);
-              }
-            });
-          } else {
-            _.relayoutNetwork(net, x, y);
-          }
-          network.raise();
-          d3.event.sourceEvent.stopImmediatePropagation();
+    dragNetworkCallback(id: any, x: number, y: number) {
+      const network = select(`#${id}`)!;
+      if (id) {
+        const net = this.entrySet[id];
+        if (net.multiSelected) {
+          const {length} = this.selectedNetworks;
+          this.selectedNetworks.map((id: string, i: number) => {
+            const n = this.entrySet[id];
+            if (n.multiSelected) {
+              this.relayoutNetwork(n, x, y);
+            }
+          });
+        } else {
+          this.relayoutNetwork(net, x, y);
         }
-      })(selector);
+        network.raise();
+      }
     }
 
     // raise z-index of network and its child devices
     private raiseNetwork(network: Network) {
-      d3.select('.emphasis').classed('emphasis', false);
-      d3.select(`#${network.id}`).raise().classed('emphasis', true);
+      select('.emphasis').classed('emphasis', false);
+      select(`#${network.id}`).raise().classed('emphasis', true);
 
       network.data!.map((d: Device) => {
-        d3.select(`#${d.id}`).raise();
+        select(`#${d.id}`).raise();
       });
     }
 
@@ -889,12 +895,12 @@
       const scale = this.deviceZoomLevel - 10;
       let translate;
 
-      d3.select(`#${network.id}`).classed('emphasis', false);
+      select(`#${network.id}`).classed('emphasis', false);
       // scale = this.scaleSetti  ngs.deviceScaleExtentToShow;
       translate = [width / 1.5 - scale * x, height / 1.5 - scale * y];
       this.collapseNetwork(network);
       if (trans) {
-        d3.select('svg').transition()
+        select('svg').transition()
           .duration(this.duration)
           .call(this.zoom.transform, this.zoomIndentity.translate(translate[0], translate[1]).scale(scale));
       }
@@ -913,7 +919,7 @@
       const {height} = this.svg;
       let scale = 1;
       let translate;
-      const emphasis = d3.select(`#${network.id}`).classed('emphasis');
+      const emphasis = select(`#${network.id}`).classed('emphasis');
       if (emphasis) {
         return;
       }
@@ -923,17 +929,17 @@
         scale = this.isEdgeVisibleToScale ? this.scaleSettings.edgeScaleExtentToShow : this.scaleSettings.deviceScaleExtentToShow;
         scale += 1,
           translate = [width / 1.5 - scale * x, height / 1.5 - scale * y];
-        d3.select('svg').transition()
+        select('svg').transition()
           .duration(this.duration)
           .call(this.zoom.transform, this.zoomIndentity.translate(translate[0], translate[1]).scale(scale));
         // if network hasn't been expanded then load associated device and edges
         this.expandNetwork(network);
         // if network has already been expanded, then collapse network
       } else if (network.expanded && !emphasis) {
-        d3.select(`#${network.id}`).classed('emphasis', false);
+        select(`#${network.id}`).classed('emphasis', false);
         // scale = this.scaleSettings.deviceScaleExtentToShow;
         translate = [width / 1.5 - scale * x, height / 1.5 - scale * y];
-        d3.select('svg').transition()
+        select('svg').transition()
           .duration(this.duration)
           .call(this.zoom.transform, this.zoomIndentity.translate(translate[0], translate[1]).scale(scale));
       }
@@ -946,8 +952,8 @@
     private activateMultiSelect() {
       const _ = this;
       this.brush.on('end', () => {
-        if (d3.event.selection) {
-          _.boundary = d3.event.selection;
+        if (event.selection) {
+          _.boundary = event.selection;
           _.brushType = Brush.MULTI_SELECT;
           setTimeout(() => {
             _.enableMultiSelect = false;
@@ -955,7 +961,7 @@
             _.boundary = [];
           }, 300);
         }
-      })(d3.select('g.brush'));
+      })(select('g.brush'));
     }
 
     private activateZoom() {
@@ -966,8 +972,8 @@
       let currMapScale = this.currentScale;
       let currMapTranslate = this.currentTranslate;
       this.brush.on('end', () => {
-        if (d3.event.selection) {
-          const extent = d3.event.selection;
+        if (event.selection) {
+          const extent = event.selection;
           const dx = extent[1][0] - extent[0][0];
           const dy = extent[1][1] - extent[0][1];
           const x = (extent[0][0] + extent[1][0]) / 2;
@@ -983,26 +989,25 @@
             (height / 2) - (currMapScale * y),
           ];
 
-          d3.select('svg').transition()
+          select('svg').transition()
             .duration(_.duration)
             .call(_.zoom.transform, _.zoomIndentity.translate(currMapTranslate[0], currMapTranslate[1]).scale(currMapScale));
           _.boundary = extent;
           _.brushType = Brush.ZOOM;
         }
-      })(d3.select('g.brush'));
+      })(select('g.brush'));
     }
 
     private registerBrush() {
       const _ = this;
-      d3.select('body').on('keydown', () => {
-        const {event} = d3;
-        if (d3.event.ctrlKey) {
+      select('body').on('keydown', () => {
+        if (event.ctrlKey) {
           _.enableMultiSelect = false;
           _.enableBrush = !_.enableBrush;
-        } else if (d3.event.shiftKey && this.enableSelect) {
+        } else if (event.shiftKey && this.enableSelect) {
           _.enableBrush = false;
           setTimeout(() => _.enableMultiSelect = !_.enableMultiSelect, 300);
-        } else if (d3.event.code == 'Escape') {
+        } else if (event.code == 'Escape') {
           if (_.enableBrush) {
             _.enableBrush = false;
           } else if (_.selectedNetworks.length > 0) {
@@ -1019,17 +1024,16 @@
     // Zoom behaviour for map
     private registerZoomBehaviour(selector: any) {
       const _ = this;
-      const
-        all = d3.select('.everything');
+      const all = select('.everything');
       this.zoom.on('zoom', () => {
-        const scale = d3.event.transform.k;
+        const scale = event.transform.k;
         const edgeScaleExtent = scale > _.scaleSettings.edgeScaleExtentToShow;
         const deviceScaleExtent = scale > _.scaleSettings.deviceScaleExtentToShow;
         const networkScaleExtent = scale > _.scaleSettings.networkScaleExtendToShow;
-        all.attr('transform', d3.event.transform);
+        all.attr('transform', event.transform);
 
         _.currentScale = scale;
-        _.currentTranslate = [d3.event.transform.x, d3.event.transform.y];
+        _.currentTranslate = [event.transform.x, event.transform.y];
         // update edge and device visibility according to scale
         _.isNetworkVisibleToScale = networkScaleExtent;
         _.scaleExtent = Math.ceil(_.clusterScale(scale));
@@ -1046,18 +1050,17 @@
         } else if (_.isEdgeVisibleToScale && !edgeScaleExtent) {
           _.isEdgeVisibleToScale = false;
         }
-        _.registerNetworkDragBehaviour(d3.selectAll('.network'));
       })(selector);
     }
 
     // reset the device scale
     private reset(width: number, height: number, d: Device) {
       this.active.classed('active', false);
-      this.active = d3.select(null);
+      this.active = select(null);
       const scale = this.scaleSettings.deviceScaleExtentToShow + 1;
       const translate = [width / 1.5 - scale * d.cx!, height / 1.5 - scale * d.cy!];
 
-      d3.select('svg').transition()
+      select('svg').transition()
         .duration(this.duration)
         .call(this.zoom.transform, this.zoomIndentity.translate(translate[0], translate[1]).scale(scale));
     }
@@ -1076,7 +1079,7 @@
     }
 
     private clickDevice(id: string) {
-      const $ = d3.select(`#${id}`).raise();
+      const $ = select(`#${id}`).raise();
       const d = this.entrySet[id];
       let scale;
       let translate;
@@ -1088,7 +1091,7 @@
       // scale to show edges
       scale = this.currentScale;
       translate = [width / 2 - scale * d.cx, height / 2 - scale * d.cy];
-      d3.select('svg').transition()
+      select('svg').transition()
         .call(this.zoom.transform, this.zoomIndentity.translate(translate[0], translate[1]).scale(scale));
     }
 
@@ -1101,28 +1104,28 @@
         height = _.svg.height || 500;
       scale = Math.ceil(this.currentScale + 6);
       translate = [width / 1.5 - scale * d.cx, height / 1.5 - scale * d.cy];
-      d3.select('svg').transition()
+      select('svg').transition()
         .duration(_.duration)
         .call(_.zoom.transform, _.zoomIndentity.translate(translate[0], translate[1]).scale(scale));
     }
 
     // register device drag behaviour
     private dragDevice(id: string, dx: number, dy: number) {
-      const g = d3.select(`#${id}`);
+      const g = select(`#${id}`);
       let d = this.entrySet[id];
       g.raise();
       if (this.selectedDevices.length > 0 && this.selectedDevices.indexOf(id) != -1) {
         this.selectedDevices.map((key: string) => {
           d = this.entrySet[key];
           if (d) {
-            this.relayoutDevice(d3.select(`#${key}`), d, dx, dy);
+            this.relayoutDevice(select(`#${key}`), d, dx, dy);
           }
         });
       } else {
         this.relayoutDevice(g, d, dx, dy);
       }
 
-      d3.event.sourceEvent.stopImmediatePropagation();
+      event.sourceEvent.stopImmediatePropagation();
     }
 
     // refresh associated edges for device, only refresh device associated links
@@ -1130,8 +1133,8 @@
       const _ = this;
       const
         id = d.id!;
-      d3.selectAll(`.${id}`).attr('d', function () {
-        const $ = d3.select(this);
+      selectAll(`.${id}`).attr('d', function () {
+        const $ = select(this);
         const sid = $.attr('sid');
         const tid = $.attr('tid');
         const arc = $.attr('arc');
@@ -1236,9 +1239,9 @@
         // console.log('Network is unavailable');
         return;
       }
-      hullPoints = d3.polygonHull(points);
+      hullPoints = polygonHull(points);
       if (hullPoints) {
-        centerid = d3.polygonCentroid(hullPoints)!;
+        centerid = polygonCentroid(hullPoints)!;
         toppoint = hullPoints[0];
         hullPoints.map((p: any) => {
           toppoint = toppoint[1] > p[1] ? p : toppoint;
@@ -1312,7 +1315,7 @@
         this.networks.map((n: Network) => {
           n.filtered = true;
         });
-        d3.selectAll('.device, .edge').classed('invisible', false);
+        selectAll('.device, .edge').classed('invisible', false);
       } else {
         this.networks.map((n: Network) => {
           let isMatched = false;

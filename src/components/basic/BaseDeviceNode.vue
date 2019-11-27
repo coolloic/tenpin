@@ -45,7 +45,7 @@
 
 <script lang="ts">
   import {Component, Prop, Vue} from 'vue-property-decorator';
-  import * as d3 from 'd3';
+  import {select, drag, event} from 'd3';
   import BaseEventPie from '@/components/basic/BaseEventPie.vue';
   import BaseNodeItem from '@/components/basic/BaseNodeItem.vue';
   import BaseNodePopover from '@/components/basic/BaseNodePopover.vue';
@@ -108,9 +108,9 @@
       if (isNaN(this.id) && this.dragCallback) {
         const _ = this;
 
-        d3.drag().on('drag', () => {
-          _.dragCallback(_.id, d3.event.dx, d3.event.dy);
-        })(d3.select(`#${this.id}`));
+        drag().on('drag', () => {
+          _.dragCallback(_.id, event.dx, event.dy);
+        })(select(`#${this.id}`));
       }
     }
 

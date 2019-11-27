@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-  import * as d3 from 'd3';
+  import {arc, scaleLinear} from 'd3';
   import {Component, Prop, Vue} from 'vue-property-decorator';
   import 'd3-selection-multi';
 
@@ -75,7 +75,7 @@
       return _.data;
     }
 
-    arcGen = (r: any) => d3.arc()
+    arcGen = (r: any) => arc()
       .innerRadius(this.donuts ? r / 2 : 0)
       .outerRadius(r * 1.2).padAngle(0.05);
 
@@ -84,7 +84,7 @@
     stroke = (d: any) => d.stroke;
 
     angleRange = (s: number, e: number, max: number = 100) => {
-      const pieScale = d3.scaleLinear().domain([0, max]).range([0, 2 * Math.PI]);
+      const pieScale = scaleLinear().domain([0, max]).range([0, 2 * Math.PI]);
       return {startAngle: pieScale(s), endAngle: pieScale(e)};
     };
 

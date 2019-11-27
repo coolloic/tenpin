@@ -23,7 +23,8 @@
       :close-callback="closeCallback"
       :nodes-visible="nodeVisible"
       :expanded="network.expanded"
-      :selected="network.multiSelected")
+      :selected="network.multiSelected"
+      :drag-callback="dragCallback")
 </template>
 
 <script lang="ts">
@@ -43,6 +44,8 @@
     @Prop() clickCallback!: any;
 
     @Prop() closeCallback!: any;
+
+    @Prop() dragCallback!: any;
 
     @Prop() r!: number;
 

@@ -30,7 +30,7 @@
       @click.prevent="onCloseEvent")
     BaseEventPie(
       donuts="true"
-      v-if="tp === 'pie' && (!expanded || !nodesVisible)"
+      v-if="tp == 'pie' && (!expanded || !nodesVisible)"
       :id="id"
       :transform="tc"
       :data="data"
@@ -43,7 +43,7 @@
       :click-callback="clickNodeCallback"
       :title-visibility="true")
     BaseNodeItem(
-      v-if="tp === 'node' && (!expanded || !nodesVisible)"
+      v-if="tp == 'node' && (!expanded || !nodesVisible)"
       :id="id" :transform="tc"
       :data="data"
       :r="r"
@@ -57,7 +57,7 @@
 
 <script lang="ts">
   import {Component, Prop, Vue} from 'vue-property-decorator';
-  import * as d3 from 'd3';
+  import {drag, select, event, polygonHull, polygonCentroid} from 'd3';
   import BaseEventPie from '@/components/basic/BaseEventPie.vue';
   import BaseNodeItem from '@/components/basic/BaseNodeItem.vue';
 
@@ -86,12 +86,23 @@
     @Prop() private expanded!: boolean;
     @Prop() private selected!: boolean;
 
+    mounted() {
+      let _ = this;
+      if (isNaN(this.id) && this.dragCallback) {
+        const _ = this;
+
+        drag().on('drag', () => {
+          _.dragCallback(_.id, event.dx, event.dy);
+        })(select(`#${this.id}`));
+      }
+    }
+
     get tc() {
       return `translate(${this.c!.x},${this.c!.y})`;
     }
 
     get tp() {
-      return this.type == null ? 'node' : 'pie';
+      return this.type == null || this.type === 'node' ? 'node' : 'pie';
     }
 
     get d() {
@@ -99,7 +110,7 @@
         // console.log('Network is unavailable');
         return;
       }
-      const hullPoints = d3.polygonHull(this.points)!;
+      const hullPoints = polygonHull(this.points)!;
 
       return hullPoints ? `M${hullPoints.join('L')}Z` : null;
     }
@@ -109,11 +120,11 @@
         // console.log('Network is unavailable');
         return;
       }
-      const hullPoints = d3.polygonHull(this.points);
+      const hullPoints = polygonHull(this.points);
       let
         centerid;
       if (hullPoints) {
-        centerid = d3.polygonCentroid(hullPoints)!;
+        centerid = polygonCentroid(hullPoints)!;
       }
       if (centerid && isNaN(centerid[0])) {
         centerid = hullPoints![0];
@@ -126,7 +137,7 @@
         // console.log('Network is unavailable');
         return;
       }
-      const hullPoints = d3.polygonHull(this.points);
+      const hullPoints = polygonHull(this.points);
       let
         toppoint: any;
       if (hullPoints) {
