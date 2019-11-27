@@ -1,44 +1,44 @@
 import Device from '@/components/pojo/Device.ts';
-import { Layer } from '@/components/pojo/Enums.ts';
+import {Layer} from '@/components/pojo/Enums.ts';
 
 export default class Edge {
-    id?: string = Date.now().toString();
+  id?: string = Date.now().toString();
 
-    class?: string = '';
+  class?: string = '';
 
-    d?: string = '';
+  d?: string = '';
 
-    strokeWidth?: number = 1;
+  strokeWidth?: number = 1;
 
-    source?: Device = {};
+  source?: Device = {};
 
-    target?: Device = {};
+  target?: Device = {};
 
-    layer?: Layer = Layer.PHYSICAL;
+  layer?: Layer = Layer.PHYSICAL;
 
-    arrow?: string = '';
+  arrow?: string = '';
 
-    visible?: boolean = false;
+  visible?: boolean = false;
 
-    text?: string = '';
+  text?: string = '';
 
-    x1?: number = 0;
+  x1?: number = 0;
 
-    y1?: number = 0;
+  y1?: number = 0;
 
-    x2?: number = 0;
+  x2?: number = 0;
 
-    y2?: number = 0;
+  y2?: number = 0;
 
-    arc?: number = 0;
+  arc?: number = 0;
 
-    bidirectional?: boolean = true;
+  bidirectional?: boolean = true;
 
-    filtered?: boolean = false;
+  filtered?: boolean = false;
 
-    hulls?: Set<string>;
+  hulls?: Set<string>;
 
-    highlight?: boolean = false;
+  highlight?: boolean = false;
 
-    icons?: any = [];
+  icons?: any = [];
 }

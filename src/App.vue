@@ -15,222 +15,216 @@
 </template>
 
 <script lang="ts">
-    import Vue from 'vue'
-    import {State, Action, Getter} from 'vuex-class';
-    import {Watch} from 'vue-property-decorator';
-    import Component from 'vue-class-component'
-    import * as d3 from 'd3';
-    import Networks from '@/components/Networks.vue';
-    import Device from '@/components/pojo/Device';
-    import Network from '@/components/pojo/Network';
-    import Edge from '@/components/pojo/Edge';
-    import {Layer} from '@/components/pojo/Enums';
-    import {TopologyState} from 'store/topology/types';
+  import Vue from 'vue'
+  import {Action, Getter} from 'vuex-class';
+  import {Watch} from 'vue-property-decorator';
+  import Component from 'vue-class-component'
+  import * as d3 from 'd3';
+  import Networks from '@/components/Networks.vue';
+  import Device from '@/components/pojo/Device';
+  import Network from '@/components/pojo/Network';
+  import Edge from '@/components/pojo/Edge';
+  import {Layer} from '@/components/pojo/Enums';
 
-    const namespace: string = 'Topology';
+  const namespace: string = 'Topology';
 
-    @Component({
-        components: {
-            Networks,
-        },
-    })
+  @Component({
+    components: {
+      Networks,
+    },
+  })
 
-    export default class App extends Vue {
-        @Getter('devices', {namespace}) listDevice: any;
-        @Getter('map', {namespace}) map!: string;
-        @Action('fetchMap', {namespace}) fetchMap: any;
-        @Action('fetchDevices', {namespace}) fetchDevices: any;
+  export default class App extends Vue {
+    @Getter('devices', {namespace}) listDevice: any;
+    @Getter('map', {namespace}) map!: string;
+    @Action('fetchMap', {namespace}) fetchMap: any;
+    @Action('fetchDevices', {namespace}) fetchDevices: any;
 
-        deviceCollection: any[] = [];
+    deviceCollection: any[] = [];
 
-        edgeCollection: Edge[] = [];
+    edgeCollection: Edge[] = [];
 
-        networkCollection: Network[] = [];
+    networkCollection: Network[] = [];
 
-        projection: any;
+    projection: any;
 
-        mapSVG = {};
+    mapSVG = {};
 
-        radius: number = 50;
+    radius: number = 50;
 
-        isMounted = false;
+    isMounted = false;
 
-        message: string = '';
+    message: string = '';
+    deviceZoomLevel: number = 30;
+    size = {
+      width: 1800,
+      height: 800,
+    };
+    dataType = 1;
+    totalDevice = 4000;
 
-        loadMap(mapUrl: string, dataUrl: string, callback: any) {
-            Promise.all([d3.json(mapUrl), d3.json(dataUrl)]).then(callback);
-        }
-
-        deviceZoomLevel: number = 30;
-
-        size = {
-            width: 1800,
-            height: 800,
-        }
-
-        dataType = 0;
-
-        totalDevice = 4000;
-
-        mounted() {
-            this.loadDataByType()
-        }
-
-        @Watch('dataType')
-        onDataTypeChanged(value: any, oldValue: any) {
-            this.loadDataByType(parseInt(value));
-        }
-
-        loadDataByType(type: number = 0) {
-            let _ = this, data = '';
-            this.isMounted = false;
-
-            switch (type) {
-                case 1:
-                    this.projection = 'world';
-                    data = 'world_lg';
-                    this.radius = 50;
-                    break;
-                case 2:
-                    this.projection = 'us';
-                    data = 'us';
-                    this.radius = 5;
-                    this.deviceZoomLevel = 50;
-                    this.totalDevice = 1000;
-                    break;
-                case 0:
-                default:
-                    this.projection = 'world';
-                    this.totalDevice = 1000;
-                    this.radius = 50;
-                    data = 'world';
-                    break;
-            }
-            _.fetchDevices(data).then(() => _.fetchMap(this.projection)).then(() => {
-                const worldMap = _.map;
-                const devices = _.parseData(_.listDevice);
-                const links = _.fakeLinks(devices);
-                const hulls = _.fakeHulls(devices);
-                this.mapSVG = {
-                    fill: 'lightgray',
-                    stroke: 'white',
-                    d: worldMap,
-                };
-                _.deviceCollection = devices;
-                _.edgeCollection = links;
-                _.networkCollection = hulls;
-                _.isMounted = true;
-            });
-        }
-
-
-        fakeHulls(devices: any = []) {
-            const hulls: any = [];
-            let counter = 1;
-            let hullId = `VLAN-${counter}`;
-            let deviceCollection: any = [];
-            let
-                hull;
-
-            devices.map((d: any, i: number) => {
-                if (counter % 5 == 0) {
-                    hull = {
-                        id: hullId,
-                        data: deviceCollection,
-                        text: hullId,
-                    };
-                    hulls.push(hull);
-                    deviceCollection = [];
-                    hullId = `VLAN-${counter}`;
-                }
-                d.hulls.push(hullId);
-                deviceCollection.push(d);
-                counter++;
-            });
-            return hulls;
-        }
-
-        fakeLinks(devices: Device[] = []) {
-            const links: any = [];
-            let link;
-            let src: Device;
-            let dest: Device;
-            let id;
-            const push = (src: Device, dest: Device, link: any) => {
-                links.push(link);
-                src.links!.push(link.id);
-                dest.links!.push(link.id);
-            };
-
-            for (let i = 0; i < devices.length; i++) {
-                src = devices[i];
-                dest = devices[i + 1];
-                if (src && dest) {
-                    link = {
-                        id: `${Layer.PHYSICAL}__${src.id}__${dest.id}`,
-                        source: src,
-                        target: dest,
-                        layer: Layer.PHYSICAL,
-                    };
-                    push(src, dest, link);
-                    link = {
-                        ...link,
-                        source: dest,
-                        target: src,
-                        id: `${Layer.PHYSICAL}__${dest.id}__${src.id}`,
-                    };
-                    push(src, dest, link);
-                    if (i % 1 == 0) {
-                        link = {
-                            ...link,
-                            source: src,
-                            target: dest,
-                            id: `${Layer.VLAN_LINK}__${dest.id}__${src.id}`,
-                            layer: Layer.VLAN_LINK,
-                        };
-                        push(src, dest, link);
-                        link = {
-                            ...link,
-                            source: src,
-                            target: dest,
-                            id: `${Layer.SYNC_LINK}__${src.id}__${dest.id}`,
-                            layer: Layer.SYNC_LINK,
-                        };
-                        push(src, dest, link);
-                        link = {
-                            ...link,
-                            source: dest,
-                            target: src,
-                            id: `${Layer.SYNC_LINK}__${dest.id}__${src.id}`,
-                            layer: Layer.SYNC_LINK,
-                        };
-                        push(src, dest, link);
-                    }
-                }
-            }
-            return links;
-        }
-
-        parseData(cities: any): Device[] {
-            const devices: any = [];
-            let device: any;
-            let data;
-            data = cities.features.slice(0, this.totalDevice);
-            data.map((c: any, index: number) => {
-                // register node change subject
-                device = new Device();
-                device.id = `n${index}`;
-                // text: c.name,,
-                device.text = c.properties.city || c.properties.name || `n${index}`;
-                device.geometry = {
-                    coordinates: c.geometry.coordinates,
-                };
-                device.point = c.geometry.coordinates;
-                devices.push(device);
-            });
-            return devices;
-        }
+    loadMap(mapUrl: string, dataUrl: string, callback: any) {
+      Promise.all([d3.json(mapUrl), d3.json(dataUrl)]).then(callback);
     }
+
+    mounted() {
+      this.loadDataByType()
+    }
+
+    @Watch('dataType')
+    onDataTypeChanged(value: any, oldValue: any) {
+      this.loadDataByType(parseInt(value));
+    }
+
+    loadDataByType(type: number = 0) {
+      let _ = this, data = '';
+      this.isMounted = false;
+
+      switch (type) {
+        case 1:
+          this.projection = 'world';
+          data = 'world_lg';
+          this.radius = 50;
+          break;
+        case 2:
+          this.projection = 'us';
+          data = 'us';
+          this.radius = 5;
+          this.deviceZoomLevel = 50;
+          this.totalDevice = 1000;
+          break;
+        case 0:
+        default:
+          this.projection = 'world';
+          this.radius = 50;
+          data = 'world';
+          break;
+      }
+      _.fetchDevices(data).then(() => _.fetchMap(this.projection)).then(() => {
+        const worldMap = _.map;
+        const devices = _.parseData(_.listDevice);
+        const links = _.fakeLinks(devices);
+        const hulls = _.fakeHulls(devices);
+        this.mapSVG = {
+          fill: 'lightgray',
+          stroke: 'white',
+          d: worldMap,
+        };
+        _.deviceCollection = devices;
+        _.edgeCollection = links;
+        _.networkCollection = hulls;
+        _.isMounted = true;
+      });
+    }
+
+
+    fakeHulls(devices: any = []) {
+      const hulls: any = [];
+      let counter = 1;
+      let hullId = `VLAN-${counter}`;
+      let deviceCollection: any = [];
+      let
+        hull;
+
+      devices.map((d: any, i: number) => {
+        if (counter % 5 == 0) {
+          hull = {
+            id: hullId,
+            data: deviceCollection,
+            text: hullId,
+          };
+          hulls.push(hull);
+          deviceCollection = [];
+          hullId = `VLAN-${counter}`;
+        }
+        d.hulls.push(hullId);
+        deviceCollection.push(d);
+        counter++;
+      });
+      return hulls;
+    }
+
+    fakeLinks(devices: Device[] = []) {
+      const links: any = [];
+      let link;
+      let src: Device;
+      let dest: Device;
+      let id;
+      const push = (src: Device, dest: Device, link: any) => {
+        links.push(link);
+        src.links!.push(link.id);
+        dest.links!.push(link.id);
+      };
+
+      for (let i = 0; i < devices.length; i++) {
+        src = devices[i];
+        dest = devices[i + 1];
+        if (src && dest) {
+          link = {
+            id: `${Layer.PHYSICAL}__${src.id}__${dest.id}`,
+            source: src,
+            target: dest,
+            layer: Layer.PHYSICAL,
+          };
+          push(src, dest, link);
+          link = {
+            ...link,
+            source: dest,
+            target: src,
+            id: `${Layer.PHYSICAL}__${dest.id}__${src.id}`,
+          };
+          push(src, dest, link);
+          if (i % 1 == 0) {
+            link = {
+              ...link,
+              source: src,
+              target: dest,
+              id: `${Layer.VLAN_LINK}__${dest.id}__${src.id}`,
+              layer: Layer.VLAN_LINK,
+            };
+            push(src, dest, link);
+            link = {
+              ...link,
+              source: src,
+              target: dest,
+              id: `${Layer.SYNC_LINK}__${src.id}__${dest.id}`,
+              layer: Layer.SYNC_LINK,
+            };
+            push(src, dest, link);
+            link = {
+              ...link,
+              source: dest,
+              target: src,
+              id: `${Layer.SYNC_LINK}__${dest.id}__${src.id}`,
+              layer: Layer.SYNC_LINK,
+            };
+            push(src, dest, link);
+          }
+        }
+      }
+      return links;
+    }
+
+    parseData(cities: any): Device[] {
+      const devices: any = [];
+      let device: any;
+      let data;
+      data = cities.features.slice(0, this.totalDevice);
+      data.map((c: any, index: number) => {
+        // register node change subject
+        device = new Device();
+        device.id = `n${index}`;
+        // text: c.name,,
+        device.text = c.properties.city || c.properties.name || `n${index}`;
+        device.geometry = {
+          coordinates: c.geometry.coordinates,
+        };
+        device.point = c.geometry.coordinates;
+        devices.push(device);
+      });
+      return devices;
+    }
+  }
 </script>
 <style lang="stylus">
   .font-icon
