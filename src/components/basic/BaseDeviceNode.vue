@@ -90,7 +90,7 @@
     }
 
     get translateToNode() {
-      return `translate(${-this.r * 6.4},${this.r}) scale(${this.strokeWidth / 2})`;
+      return `translate(${-this.r * 5.5},${this.r}) scale(${this.strokeWidth / 2})`;
     }
 
     get classes() {

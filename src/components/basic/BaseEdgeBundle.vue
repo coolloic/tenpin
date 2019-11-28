@@ -124,16 +124,16 @@
     }
 
     get translateToPopoverToBoundary() {
-      return `translate(${this.source.cx! - this.r * 2},${this.source.cy! - this.r * 2.2}) scale(${this.strokeWidth / 2})`;
+      return `translate(${this.source.cx! - this.r * 2},${this.source.cy! - this.r * 2}) scale(${this.strokeWidth / 2})`;
     }
 
     get translateToLinkCircleToBoundary() {
-      return `translate(${this.source.cx! - this.r * 2},${this.source.cy! - this.r * 2.2})`;
+      return `translate(${this.source.cx! - this.r * 3},${this.source.cy! - this.r * 2.2})`;
     }
 
     get translatePopoverToLinkCircle() {
       const [x, y] = [this.linkCenter.x, this.linkCenter.y];
-      return `translate(${x - this.strokeWidth},${y}) scale(${this.strokeWidth / 2})`;
+      return `translate(${x + this.r},${y}) scale(${this.strokeWidth / 2})`;
     }
 
     get translatePopover() {

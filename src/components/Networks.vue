@@ -360,6 +360,7 @@
       return counter;
     }
 
+
     // return computed devices
     get devices() {
       const _ = this;
@@ -470,7 +471,6 @@
         e.visible = e.visible == null ? false : e.visible;
         e.filtered = e.filtered == null ? true : e.filtered;
         e.text = e.text || e.id;
-        this.entrySet[e.id] = this.entrySet[e.id] || e;
         this.updateEdgeBundles(e);
         this.isEdgeFiltered(e);
       } else {
