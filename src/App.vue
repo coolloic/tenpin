@@ -227,11 +227,14 @@
   }
 </script>
 <style lang="stylus">
+
   .font-icon
     font-family 'next-font'
 
   body
-    font-family: 'Roboto', sans-serif;
+    font-family 'Roboto', sans-serif
+    &.onMove
+      cursor grabbing
 
   .ti-autocomplete ul
     max-height 200px !important

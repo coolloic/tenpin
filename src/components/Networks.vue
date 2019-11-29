@@ -125,8 +125,21 @@
 <!--Node(:cx="device.cx" :cy="device.cy" :r="r" :stroke-width="strokeWidth" :key="device.id" :font-size="fontSize" :text="device.text")-->
 <!--                        EventPie(:cx="device.cx" :cy="device.cy" :r="r" :stroke-width="strokeWidth" :key="device.id" :data="device.event" :font-size="fontSize" :text="device.text")-->
 <script lang="ts">
-  import {select, brush, zoomIdentity, zoom, geoPath, scaleLinear, geoAlbersUsa, geoNaturalEarth1,
-    schemeCategory10, selectAll, event, polygonHull, polygonCentroid} from 'd3';
+  import {
+    brush,
+    event,
+    geoAlbersUsa,
+    geoNaturalEarth1,
+    geoPath,
+    polygonCentroid,
+    polygonHull,
+    scaleLinear,
+    schemeCategory10,
+    select,
+    selectAll,
+    zoom,
+    zoomIdentity
+  } from 'd3';
   import Vue from 'vue';
   import {Component, Prop, Watch,} from 'vue-property-decorator';
   import VueTagsInput from '@johmun/vue-tags-input';
@@ -195,7 +208,7 @@
     expandedNetworks: any[] = [];
     // load networks first using min radius before cluster
     initClusters: any = new Supercluster({
-      radius: 0.0000001,
+      radius: 0.00000001,
       maxZoom: this.clusterSettings.maxZoom,
     });
     popoverX: number = 0;
@@ -722,7 +735,7 @@
     }
 
     refreshViaScale() {
-      this.currentScale = this.currentScale + 0.000001;
+      this.currentScale = this.currentScale + 0.00000001;
     }
 
     cleanSelectedNetworks() {
@@ -1031,7 +1044,8 @@
         const deviceScaleExtent = scale > _.scaleSettings.deviceScaleExtentToShow;
         const networkScaleExtent = scale > _.scaleSettings.networkScaleExtendToShow;
         all.attr('transform', event.transform);
-
+        if (Math.abs(scale - _.currentScale) < 0.001)
+          return;
         _.currentScale = scale;
         _.currentTranslate = [event.transform.x, event.transform.y];
         // update edge and device visibility according to scale

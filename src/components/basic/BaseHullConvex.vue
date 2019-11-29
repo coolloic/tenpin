@@ -57,7 +57,7 @@
 
 <script lang="ts">
   import {Component, Prop, Vue} from 'vue-property-decorator';
-  import {drag, select, event, polygonHull, polygonCentroid} from 'd3';
+  import {drag, event, polygonCentroid, polygonHull, select, selectAll} from 'd3';
   import BaseEventPie from '@/components/basic/BaseEventPie.vue';
   import BaseNodeItem from '@/components/basic/BaseNodeItem.vue';
 
@@ -90,10 +90,25 @@
       let _ = this;
       if (isNaN(this.id) && this.dragCallback) {
         const _ = this;
-
+        let x = 0, y = 0;
         drag().on('drag', () => {
-          _.dragCallback(_.id, event.dx, event.dy);
+          document.body.style.cursor = "grabbing";
+          select(`#${this.id}`).classed('on-move', true);
+          x += event.dx;
+          y += event.dy;
+        }).on('end', () => {
+          _.dragCallback(_.id, x, y);
+          x = 0;
+          y = 0;
+          document.body.style.cursor = "move";
+          select(`#${this.id}`).classed('on-move', false);
         })(select(`#${this.id}`));
+      }
+    }
+
+    destroyed() {
+      if (isNaN(this.id) && this.dragCallback) {
+        select(`#${this.id}`).on('drag', null);
       }
     }
 
@@ -182,6 +197,8 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus" scoped>
+  .on-move
+    opacity 0.6
   path.overlay
     cursor move
 

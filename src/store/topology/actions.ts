@@ -3,23 +3,18 @@ import axios from 'axios';
 import {TopologyState, Device, FETCH_DEVICES, FETCH_DEVICES_ERROR, FETCH_MAP} from './types';
 import {RootState} from '../types';
 
-const FETCH_DEVICES_URL = 'https://loic-web-app.s3-ap-southeast-2.amazonaws.com/ne_50m_populated_places_simple.geojson';
-const FETCH_US_DEVICES_URL = 'https://loic-web-app.s3-ap-southeast-2.amazonaws.com/us_cities.geojson';
-const FETCH_WORLD_DEVICES_URL = 'https://loic-web-app.s3-ap-southeast-2.amazonaws.com/ne_10m_populated_places_simple.geojson';
-const FETCH_WORLD_MAP_URL = 'https://loic-web-app.s3-ap-southeast-2.amazonaws.com/world-110m.geojson';
-const FETCH_US_MAP_URL = 'https://loic-web-app.s3-ap-southeast-2.amazonaws.com/us-states.json';
 const deviceUrl = (type: string) => {
   let url = '';
   switch (type) {
     case 'world_lg':
-      url = FETCH_WORLD_DEVICES_URL;
+      url = 'http://localhost:3000/devices';
       break;
     case 'us':
-      url = FETCH_US_DEVICES_URL;
+      url = 'http://localhost:3000/devices';
       break;
     case 'world':
     default:
-      url = FETCH_DEVICES_URL;
+      url = 'http://localhost:3000/devices';
       break;
   }
   return url;
@@ -29,11 +24,11 @@ const mapUrl = (type: string) => {
   let url = '';
   switch (type) {
     case 'us':
-      url = FETCH_US_MAP_URL;
+      url = 'http://localhost:3000/map';
       break;
     case 'world':
     default:
-      url = FETCH_WORLD_MAP_URL;
+      url = 'http://localhost:3000/map';
       break;
   }
   return url;

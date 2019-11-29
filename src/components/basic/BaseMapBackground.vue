@@ -22,6 +22,4 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus" scoped>
-  g.map
-    cursor move
 </style>

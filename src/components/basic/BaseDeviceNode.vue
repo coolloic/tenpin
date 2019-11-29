@@ -45,7 +45,7 @@
 
 <script lang="ts">
   import {Component, Prop, Vue} from 'vue-property-decorator';
-  import {select, drag, event} from 'd3';
+  import {drag, event, select, selectAll} from 'd3';
   import BaseEventPie from '@/components/basic/BaseEventPie.vue';
   import BaseNodeItem from '@/components/basic/BaseNodeItem.vue';
   import BaseNodePopover from '@/components/basic/BaseNodePopover.vue';
@@ -77,6 +77,31 @@
     @Prop() private clazz!: string;
     @Prop() private dragCallback!: any;
 
+    mounted() {
+      if (isNaN(this.id) && this.dragCallback) {
+        const _ = this;
+        let x = 0, y = 0;
+        drag().on('drag', () => {
+          document.body.style.cursor = "grabbing";
+          select(`#${this.id}`).classed('on-move', true);
+          x += event.dx;
+          y += event.dy;
+        }).on('end', () => {
+          _.dragCallback(_.id, x, y);
+          x = 0;
+          y = 0;
+          document.body.style.cursor = "move";
+          select(`#${this.id}`).classed('on-move', false);
+        })(select(`#${this.id}`));
+      }
+    }
+
+    destroyed() {
+      if (isNaN(this.id) && this.dragCallback) {
+        select(`#${this.id}`).on('drag', null);
+      }
+    }
+
     get translateToRightBottom() {
       return `translate(${this.r / 2},${this.r / 2}) scale(${this.strokeWidth / 5})`;
     }
@@ -101,16 +126,6 @@
     clickDevice(id: string) {
       if (this.clickCallback) {
         this.clickCallback(id);
-      }
-    }
-
-    mounted() {
-      if (isNaN(this.id) && this.dragCallback) {
-        const _ = this;
-
-        drag().on('drag', () => {
-          _.dragCallback(_.id, event.dx, event.dy);
-        })(select(`#${this.id}`));
       }
     }
 
@@ -139,6 +154,8 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus" scoped>
+  .on-move
+    opacity .6
   .out-circle
     display none
     fill none
