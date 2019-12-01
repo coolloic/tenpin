@@ -128,7 +128,7 @@
     }
 
     get translateToLinkCircleToBoundary() {
-      return `translate(${this.source.cx! - this.r * 3},${this.source.cy! - this.r * 2.2})`;
+      return `translate(${this.source.cx! - this.r * 1.5},${this.source.cy! - this.r * 2.3})`;
     }
 
     get translatePopoverToLinkCircle() {

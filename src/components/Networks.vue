@@ -207,10 +207,7 @@
     selectedNetworks = [];
     expandedNetworks: any[] = [];
     // load networks first using min radius before cluster
-    initClusters: any = new Supercluster({
-      radius: 0.00000001,
-      maxZoom: this.clusterSettings.maxZoom,
-    });
+    initClusters: any = new Supercluster(this.clusterSettings);
     popoverX: number = 0;
     popoverY: number = 0;
     @Prop() private networkCollection!: any;
@@ -1034,6 +1031,8 @@
       });
     }
 
+    zoomTimer: any;
+
     // Zoom behaviour for map
     private registerZoomBehaviour(selector: any) {
       const _ = this;
@@ -1050,7 +1049,11 @@
         _.currentTranslate = [event.transform.x, event.transform.y];
         // update edge and device visibility according to scale
         _.isNetworkVisibleToScale = networkScaleExtent;
-        _.scaleExtent = Math.ceil(_.clusterScale(scale));
+        if (_.zoomTimer)
+          clearTimeout(_.zoomTimer);
+        _.zoomTimer = setTimeout(() => {
+          _.scaleExtent = Math.ceil(_.clusterScale(scale));
+        }, 300);
         if (!_.isDeviceVisibleToScale && deviceScaleExtent) {
           _.isDeviceVisibleToScale = true;
         } else if (_.isDeviceVisibleToScale && !deviceScaleExtent) {

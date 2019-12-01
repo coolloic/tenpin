@@ -61,7 +61,7 @@
       height: 800,
     };
     dataType = 1;
-    totalDevice = 200;
+    totalDevice = 1000;
 
     loadMap(mapUrl: string, dataUrl: string, callback: any) {
       Promise.all([d3.json(mapUrl), d3.json(dataUrl)]).then(callback);
