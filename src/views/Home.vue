@@ -1,10 +1,13 @@
 <template lang="pug">
   mixin nav-drawer
     v-navigation-drawer(v-model="drawer" fixed left temporary)
-      v-list(nav shaped)
+      .light-blue.pt-2.pb-2
+        v-img.ml-4.mr-4(src="https://pins.co.nz/wp-content/uploads/2015/06/pins-logo.png" max-width="100")
+      v-divider
+      v-list(nav)
         v-list-item-group(active-class="blue--text text--accent-4")
-          v-list-item(v-for="(item,index) in items" :key="index" @click="click(item)")
-            v-list-item-icon(v-if="item.icon"): v-icon {{item.icon}}
+          v-list-item.border-bt.ma-0(v-for="(item,index) in items" :key="index" @click="click(item)")
+            v-list-item-icon.ma-3(v-if="item.icon"): v-icon {{item.icon}}
             v-list-item-title(v-if="item.name") {{item.name}}
 
   mixin booking-dialog
@@ -41,19 +44,19 @@
         v-card-title: h1.booking-title MAKE A BOOKING
         v-card-text: h3.text--primary Give us a call or fill out the form below and we will reply as soon as possible to confirm your booking. PINS – 199 Lincoln Rd, Henderson. Ph 09 837 1111
   v-app#inspire
-    v-system-bar.sticky-system-bar(fixed)
+    v-system-bar.sticky-system-bar.blue.lighten-1(fixed)
       .flex.width-1440
         v-spacer
-        v-chip.pa-0(small)
-          v-icon map
+        v-chip.pa-2.white--text.transparent(small link)
+          v-icon.white--text.map-icon map
           label 14 Link Crescent, Stanmore Bay
-        v-chip.pa-0.ml-2(href="tel: 0800 666 666" small)
-          v-icon phone
+        v-chip.pa-2.ml-2.blue.lighten-5.blue--text(href="tel: 0800 666 666" small)
+          v-icon.blue--text phone
           label 0800 666 666
     +app-bar
     +nav-drawer
     +booking-dialog
-    v-content
+    v-content.mt-84
       carousel
       .width-1440
         event-tile
@@ -150,6 +153,8 @@
   };
 </script>
 <style lang="stylus">
+  .mt-84
+    margin-top 84px
   .app-bar
     top 20px
     width 100%
@@ -168,7 +173,12 @@
   .width-1440
     max-width 1440px!important
     margin auto
+  .border-bt
+    border-bottom 1px solid #eee
   @media (max-width: 768px)
     .v-dialog
       margin 8px!important
+  @media (max-width: 320px)
+    .map-icon
+      display none!important
 </style>
