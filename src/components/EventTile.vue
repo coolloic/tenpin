@@ -3,11 +3,11 @@
         v-row(align="center" cols="12")
           v-col
             v-card
-              v-toolbar(flat color="purple" dark)
+              v-toolbar.light-blue(flat dark)
                 v-toolbar-title Special Deals
-              v-tabs(show-arrows=false)
-                v-tab.purple--text(v-for="(item,i) in items" :key="i") {{item.title}}
-                  v-icon.ml-2.purple--text(left) {{item.icon}}
+              v-tabs.event-tabs(show-arrows=false style="min-width: 100%")
+                v-tab.blue--text.darken-5.event-tab(v-for="(item,i) in items" :key="i") {{item.title}}
+                  v-icon.ml-2.blue--text.darken-5(left) {{item.icon}}
                 v-tab-item(v-for="(item,i) in items" :key="i")
                   v-card(flat)
                     v-card-text
@@ -89,6 +89,15 @@
   .event-img
     max-width 350px
     width 100%
+  .event-tab
+    border-bottom 1px solid #eee
+    flex-grow 1!important
+  .event-tab + .event-tab
+    border-left 1px solid #eee
+  .event-tab:last-child
+    border-right 1px solid #eee
+  .event-tabs .v-slide-group__prev--disabled
+    display none!important
   @media (max-width:768px)
     .flex-break
       display block
