@@ -18,6 +18,7 @@
 
   mixin app-bar
     v-app-bar.sticky-app-bar.app-bar(dark outlined fixed)
+      v-img.logo(src="https://pins.co.nz/wp-content/uploads/2015/06/pins-logo.png" max-width="60px")
       v-app-bar-nav-icon(@click.stop="drawer = !drawer")
       v-spacer
       v-tooltip(v-model="bookingIcon" bottom )
@@ -34,15 +35,16 @@
         span Search
 
   mixin price-tiles
-    v-row(cols="12" md="8" sm="12")
-      v-col(lg="3" md="4" sm="6" v-for="i in new Array(4)")
-        tile(v-for="item in pricesData" v-bind="item")
+    v-container
+      v-row(cols="12" md="8" sm="12")
+        v-col(lg="3" md="4" sm="6" v-for="i in new Array(4)")
+          tile(v-for="item in pricesData" v-bind="item")
 
   mixin parallax-banner
-    v-row(cols="12"): v-col(cols="12")
-      parallax(height="350" img="https://cdn.vuetifyjs.com/images/parallax/material2.jpg")
-        v-card-title: h1.booking-title MAKE A BOOKING
-        v-card-text: h3.text--primary Give us a call or fill out the form below and we will reply as soon as possible to confirm your booking. PINS – 199 Lincoln Rd, Henderson. Ph 09 837 1111
+    v-container
+      v-row(cols="12"): v-col(cols="12")
+        parallax(height="400" img="https://cdn.vuetifyjs.com/images/parallax/material2.jpg" @click="dialog = !dialog")
+
   v-app#inspire
     v-system-bar.sticky-system-bar.blue.lighten-1(fixed)
       .flex.width-1440
@@ -59,10 +61,10 @@
     v-content.mt-84
       carousel
       .width-1440
+        +parallax-banner
         event-tile
-        v-container
-          +parallax-banner
-          +price-tiles
+        +price-tiles
+
     v-btn(
     fixed
     dark
@@ -167,15 +169,14 @@
   .sticky-app-bar
     z-index 99
     top 32px!important
-  .booking-title
-    line-height 1.1
-    word-break normal
   .width-1440
     max-width 1440px!important
     margin auto
   .border-bt
     border-bottom 1px solid #eee
   @media (max-width: 768px)
+    .logo
+      display none!important
     .v-dialog
       margin 8px!important
   @media (max-width: 320px)

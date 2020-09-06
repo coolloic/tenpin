@@ -16,16 +16,13 @@
     data: () => ({
       items: [
         {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
+          src: 'https://pins.co.nz/wp-content/uploads/2015/04/top-slider-11.jpg',
         },
         {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
+          src: 'https://pins.co.nz/wp-content/uploads/2015/04/top-slider-21.jpg',
         },
         {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
-        },
-        {
-          src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
+          src: 'https://pins.co.nz/wp-content/uploads/2015/04/top-slider-31.jpg',
         }]
     }),
   });
