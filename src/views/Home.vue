@@ -37,15 +37,26 @@
   mixin price-tiles
     v-container
       v-row(cols="12" md="8" sm="12")
-        v-col(lg="3" md="4" sm="6" v-for="i in new Array(4)")
-          tile(v-for="item in pricesData" v-bind="item")
+        v-col(lg="3" md="4" sm="6" v-for="item in pricesData")
+          tile(v-bind="item")
 
   mixin parallax-banner
     v-container
       v-row(cols="12"): v-col(cols="12")
         parallax(height="400" img="https://cdn.vuetifyjs.com/images/parallax/material2.jpg" @click="dialog = !dialog")
 
-  v-app#inspire
+  mixin booking-button
+    v-btn(
+      fixed
+      dark
+      fab
+      bottom
+      right
+      color="pink"
+      @click="dialog = !dialog")
+      v-icon assignment_turned_in
+
+  mixin system-bar
     v-system-bar.sticky-system-bar.blue.lighten-1(fixed)
       .flex.width-1440
         v-spacer
@@ -55,6 +66,8 @@
         v-chip.pa-2.ml-2.blue.lighten-5.blue--text(href="tel: 0800 666 666" small)
           v-icon.blue--text phone
           label 0800 666 666
+  v-app#inspire
+    +system-bar
     +app-bar
     +nav-drawer
     +booking-dialog
@@ -64,16 +77,7 @@
         +parallax-banner
         event-tile
         +price-tiles
-
-    v-btn(
-    fixed
-    dark
-    fab
-    bottom
-    right
-    color="pink"
-    @click="dialog = !dialog")
-      v-icon assignment_turned_in
+    +booking-button
     t-footer
 
 </template>
@@ -99,8 +103,30 @@
     data: () => {
       return {
         pricesData: [{
-          img: 'https://cdn.vuetifyjs.com/images/cards/docks.jpg',
-          title: 'Top 10 Australian beaches',
+          img: 'https://img.pixers.pics/pho_wat(s3:700/FO/43/69/31/57/700_FO43693157_1cb14d96c24a9d9b4702ebf563b9ca3b.jpg,700,700,cms:2018/10/5bd1b6b8d04b8_220x50-watermark.png,over,480,650,jpg)/posters-bowling-strike-bunt.jpg.jpg',
+          title: 'Individual rates',
+          tag: '<strong>1</strong>Game',
+          subtitle: 'Number 10',
+          content: 'Whitsunday Island, Whitsunday Islands',
+          href: '#'
+        }, {
+          img: 'https://freedesignfile.com/upload/2018/08/Bowling-tournament-poster-design-vector-06.jpg',
+          title: 'Individual rates',
+          tag: '<strong>2</strong>Games',
+          subtitle: 'Number 10',
+          content: 'Whitsunday Island, Whitsunday Islands',
+          href: '#'
+        }, {
+          img: 'https://img.pixers.pics/pho_wat(s3:700/FO/43/69/31/57/700_FO43693157_1cb14d96c24a9d9b4702ebf563b9ca3b.jpg,700,700,cms:2018/10/5bd1b6b8d04b8_220x50-watermark.png,over,480,650,jpg)/posters-bowling-strike-bunt.jpg.jpg',
+          title: 'Individual rates',
+          tag: '<strong>3</strong>Games',
+          subtitle: 'Number 10',
+          content: 'Whitsunday Island, Whitsunday Islands',
+          href: '#'
+        }, {
+          img: 'https://freedesignfile.com/upload/2018/08/Bowling-tournament-poster-design-vector-06.jpg',
+          title: 'Individual rates',
+          tag: '<strong>3</strong>Games',
           subtitle: 'Number 10',
           content: 'Whitsunday Island, Whitsunday Islands',
           href: '#'
