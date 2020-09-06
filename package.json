@@ -20,7 +20,7 @@
     "pug": "^2.0.4",
     "pug-load": "^2.0.12",
     "pug-plain-loader": "^1.0.0",
-    "socket.io": "^2.3.0",
+    "rxjs": "^6.5.3",
     "supercluster": "^6.0.2",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
@@ -31,8 +31,8 @@
     "vuex-class": "^0.3.2"
   },
   "devDependencies": {
-    "@types/d3": "^5.7.2",
     "@types/axios": "^0.14.0",
+    "@types/d3": "^5.7.2",
     "@types/d3-selection-multi": "^1.0.7",
     "@types/jest": "^24.0.11",
     "@types/supercluster": "^5.0.1",

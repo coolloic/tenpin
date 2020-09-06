@@ -1,18 +1,174 @@
-<template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+<template lang="pug">
+  mixin nav-drawer
+    v-navigation-drawer(v-model="drawer" fixed left temporary)
+      v-list(nav shaped)
+        v-list-item-group(active-class="blue--text text--accent-4")
+          v-list-item(v-for="(item,index) in items" :key="index" @click="click(item)")
+            v-list-item-icon(v-if="item.icon"): v-icon {{item.icon}}
+            v-list-item-title(v-if="item.name") {{item.name}}
+
+  mixin booking-dialog
+    v-dialog#contact(v-model="dialog" max-width="600px")
+      v-card
+        v-card-title.headline.grey.lighten-3 Make a Booking
+        v-card-text.pa-2: booking
+
+  mixin app-bar
+    v-app-bar.sticky-app-bar.app-bar(dark outlined fixed)
+      v-app-bar-nav-icon(@click.stop="drawer = !drawer")
+      v-spacer
+      v-tooltip(v-model="bookingIcon" bottom )
+        template(v-slot:activator="{on, attrs}")
+          v-btn(icon v-bind="attrs" v-on="on" @click="dialog = !dialog"): v-icon assignment_turned_in
+        span Make a booking
+      v-tooltip(v-model="newsIcon" bottom)
+        template(v-slot:activator="{on, attrs}")
+          v-btn(icon v-bind="attrs" v-on="on"): v-icon fiber_new
+        span What's on
+      v-tooltip(v-model="searchIcon" bottom)
+        template(v-slot:activator="{on, attrs}")
+          v-btn(icon v-bind="attrs" v-on="on"): v-icon mdi-magnify
+        span Search
+
+  mixin price-tiles
+    v-row(cols="12" md="8" sm="12")
+      v-col(lg="3" md="4" sm="6" v-for="i in new Array(4)")
+        tile(v-for="item in pricesData" v-bind="item")
+
+  mixin parallax-banner
+    v-row(cols="12"): v-col(cols="12")
+      parallax(height="350" img="https://cdn.vuetifyjs.com/images/parallax/material2.jpg")
+        v-card-title: h1.booking-title MAKE A BOOKING
+        v-card-text: h3.text--primary Give us a call or fill out the form below and we will reply as soon as possible to confirm your booking. PINS – 199 Lincoln Rd, Henderson. Ph 09 837 1111
+  v-app#inspire
+    v-system-bar.sticky-system-bar(fixed)
+      .flex.width-1440
+        v-spacer
+        v-chip.pa-0(small)
+          v-icon map
+          label 14 Link Crescent, Stanmore Bay
+        v-chip.pa-0.ml-2(href="tel: 0800 666 666" small)
+          v-icon phone
+          label 0800 666 666
+    +app-bar
+    +nav-drawer
+    +booking-dialog
+    v-content
+      carousel
+      .width-1440
+        event-tile
+        v-container
+          +parallax-banner
+          +price-tiles
+    v-btn(
+    fixed
+    dark
+    fab
+    bottom
+    right
+    color="pink"
+    @click="dialog = !dialog")
+      v-icon assignment_turned_in
+    t-footer
+
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue';
+  import Carousel from '@/components/Carousel';
+  import TFooter from '@/components/TFooter';
+  import Tile from '@/components/Tile';
+  import Booking from '@/components/Booking';
+  import EventTile from '@/components/EventTile';
+  import Parallax from '@/components/Parallax';
 
-export default {
-  name: 'home',
-  components: {
-    HelloWorld,
-  },
-};
+  export default {
+    name: 'home',
+    components: {
+      Carousel,
+      TFooter,
+      Tile,
+      Booking,
+      Parallax,
+      EventTile
+    },
+    data: () => {
+      return {
+        pricesData: [{
+          img: 'https://cdn.vuetifyjs.com/images/cards/docks.jpg',
+          title: 'Top 10 Australian beaches',
+          subtitle: 'Number 10',
+          content: 'Whitsunday Island, Whitsunday Islands',
+          href: '#'
+        }],
+        dialog: false,
+        bookingIcon: false,
+        newsIcon: false,
+        searchIcon: false,
+        drawer: false,
+        group: null,
+        items: [{
+          icon: 'home',
+          name: 'Home',
+        }, {
+          icon: 'fiber_new',
+          name: `What's on`,
+        }, {
+          icon: 'monetization_on',
+          name: 'Prices',
+        }, {
+          icon: 'people',
+          name: 'Parties',
+        }, {
+          icon: 'cake',
+          name: 'Functions',
+        }, {
+          icon: 'extension',
+          name: 'Tournaments',
+        }, {
+          icon: 'assignment_turned_in',
+          name: 'Make a booking',
+        }, {
+          icon: 'contact_mail',
+          name: 'Contact Us',
+        }]
+      };
+    },
+    watch: {
+      group() {
+        this.drawer = false;
+      }
+    },
+    methods: {
+      click: function (item) {
+        switch (item.icon) {
+          case 'assignment_turned_in':
+          default:
+            this.dialog = !this.dialog;
+        }
+      }
+    }
+  };
 </script>
+<style lang="stylus">
+  .app-bar
+    top 20px
+    width 100%
+  .sticky-system-bar
+    min-height 32px!important
+    z-index 99
+    top 0
+    label
+      line-height 32px
+  .sticky-app-bar
+    z-index 99
+    top 32px!important
+  .booking-title
+    line-height 1.1
+    word-break normal
+  .width-1440
+    max-width 1440px!important
+    margin auto
+  @media (max-width: 768px)
+    .v-dialog
+      margin 8px!important
+</style>
