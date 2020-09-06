@@ -3,7 +3,7 @@
         v-row(align="center" cols="12")
           v-item-group.ml-2.mt-3.shrink.sticky(v-model="window" mondatory tag="v-flex")
             v-item(v-for="(item,n) in items" :key="n" v-slot:default="{active, toggle}")
-              div.mb-2.pb-0.border-bottom: v-btn(:input-value="active" icon @click="toggle" x-large): v-icon.blue--text(dense) {{item.icon}}
+              div.mb-2.pb-0.box-shadow: v-btn(:input-value="active" icon @click="toggle" x-large): v-icon.blue--text(dense) {{item.icon}}
           v-col
             v-window.elevation-1(v-model="window" vertical)
               v-window-item(v-for="(item,n) in items" :key="n")
@@ -16,6 +16,7 @@
                 v-card-text
                   p.black--text Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                 v-card-actions
+                  v-spacer
                   v-btn.primary.booking-btn(x-large @click="click") Booking
                     v-icon assignment_turned_in
 </template>
@@ -53,6 +54,8 @@
   });
 </script>
 <style lang="stylus">
+  h3
+    word-break normal
   .flex
     display flex
   .sticky

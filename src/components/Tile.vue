@@ -3,7 +3,7 @@
     v-img.white--text.align-end.flex(:src="img")
       v-card-title.box-shadow.text-shadow(v-if="title") {{title}}
         v-spacer
-    v-btn.blue.white--text.tile-badge(large v-html="tag" rounded absolute right)
+    v-btn.primary.white--text.tile-badge(large v-html="tag" rounded absolute right @click="click")
     v-card-subtitle.pb-0(v-if="false") {{subtitle}}
     v-card-text.pb-0.text--primary(v-if="content")
       v-list
@@ -12,7 +12,7 @@
           v-list-item-content.align-end.pt-0.pb-0.orange--text.price-label {{item.price}}
     v-card-actions
       v-spacer
-      v-btn.blue.booking-btn(text color="white" outlined @click="click") Booking
+      v-btn.primary.booking-btn(text color="white" outlined @click="click" x-large) Booking
         v-icon.ml-1 assignment_turned_in
 </template>
 
@@ -51,6 +51,7 @@
     text-shadow 1px 1px 2px #000
 
   .price-field
+    font-weight bold
     flex-grow 4 !important
 
   .table-item:nth-child(2n)

@@ -37,7 +37,7 @@
   mixin price-tiles
     v-container
       v-row(cols="12" md="8" sm="12")
-        v-col(lg="3" md="4" sm="6" v-for="item in pricesData")
+        v-col(lg="4" md="4" sm="6" v-for="item in pricesData")
           tile(v-bind="item" @click="dialog = !dialog")
 
   mixin parallax-banner
@@ -134,22 +134,22 @@
           subtitle: 'Number 10',
           content: [{
             field: 'Adults',
-            price: '$13.50'
+            price: '$22.00'
           },{
             field: 'Students/Seniors (over 60 years)',
-            price: '$12.50'
+            price: '$20.00'
           },{
             field: 'Children (under 15 years)',
-            price: '$11.50'
+            price: '$18.00'
           },{
             field: 'Frequent Bowlers Club Member',
-            price: '$10.00'
+            price: '$16.00'
           },{
             field: 'Special Needs',
-            price: '$7.50'
+            price: '$15.00'
           },{
             field: 'League Member',
-            price: '$5'
+            price: '$10'
           }],
           href: '#'
         }, {
@@ -159,47 +159,70 @@
           subtitle: 'Number 10',
           content: [{
             field: 'Adults',
-            price: '$13.50'
+            price: '$28.00'
           },{
             field: 'Students/Seniors (over 60 years)',
-            price: '$12.50'
+            price: '$26.00'
           },{
             field: 'Children (under 15 years)',
-            price: '$11.50'
+            price: '$24.00'
           },{
             field: 'Frequent Bowlers Club Member',
-            price: '$10.00'
+            price: '$21.00'
           },{
             field: 'Special Needs',
-            price: '$7.50'
+            price: '$20.00'
           },{
             field: 'League Member',
-            price: '$5'
+            price: '$15'
           }],
           href: '#'
         }, {
           img: 'https://freedesignfile.com/upload/2018/08/Bowling-tournament-poster-design-vector-06.jpg',
-          title: 'Individual rates',
+          title: 'Group rates',
+          tag: '<strong>1</strong>Game',
+          subtitle: 'Number 10',
+          content: [{
+            field: 'Family (2 Adults/2 Children)',
+            price: '$46.00'
+          },{
+            field: 'School Groups (per person) Valid during School Hours only',
+            price: '$8.00'
+          },{
+            field: 'School Holiday Programmes (valid Monday to Friday till 4pm. Only Valid during school holidays. Registered Holiday programmes only. Bookings ESSENTIAL',
+            price: '$8.50'
+          }],
+          href: '#'
+        },{
+          img: 'https://freedesignfile.com/upload/2018/08/Bowling-tournament-poster-design-vector-06.jpg',
+          title: 'Group rates',
+          tag: '<strong>2</strong>Games',
+          subtitle: 'Number 10',
+          content: [{
+            field: 'Family (2 Adults/2 Children)',
+            price: '$72.00'
+          },{
+            field: 'School Groups (per person) Valid during School Hours only',
+            price: '$14.00'
+          },{
+            field: 'School Holiday Programmes (valid Monday to Friday till 4pm. Only Valid during school holidays. Registered Holiday programmes only. Bookings ESSENTIAL',
+            price: '$14.00'
+          }],
+          href: '#'
+        },{
+          img: 'https://freedesignfile.com/upload/2018/08/Bowling-tournament-poster-design-vector-06.jpg',
+          title: 'Group rates',
           tag: '<strong>3</strong>Games',
           subtitle: 'Number 10',
           content: [{
-            field: 'Adults',
-            price: '$13.50'
+            field: 'Family (2 Adults/2 Children)',
+            price: '$96.00'
           },{
-            field: 'Students/Seniors (over 60 years)',
-            price: '$12.50'
+            field: 'School Groups (per person) Valid during School Hours only',
+            price: '$20.00'
           },{
-            field: 'Children (under 15 years)',
-            price: '$11.50'
-          },{
-            field: 'Frequent Bowlers Club Member',
-            price: '$10.00'
-          },{
-            field: 'Special Needs',
-            price: '$7.50'
-          },{
-            field: 'League Member',
-            price: '$5'
+            field: 'School Holiday Programmes (valid Monday to Friday till 4pm. Only Valid during school holidays. Registered Holiday programmes only. Bookings ESSENTIAL',
+            price: '$20.00'
           }],
           href: '#'
         }],
