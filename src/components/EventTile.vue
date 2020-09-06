@@ -1,24 +1,29 @@
 <template lang="pug">
     v-container
         v-row(align="center" cols="12")
-          v-item-group.ml-2.mt-3.shrink.sticky(v-model="window" mondatory tag="v-flex")
-            v-item(v-for="(item,n) in items" :key="n" v-slot:default="{active, toggle}")
-              div.mb-2.pb-0.box-shadow: v-btn(:input-value="active" icon @click="toggle" x-large): v-icon.blue--text(dense) {{item.icon}}
           v-col
-            v-window.elevation-1(v-model="window" vertical)
-              v-window-item(v-for="(item,n) in items" :key="n")
-                v-card-title
-                  div.flex
-                    v-avatar.mr-4(color="blue"): v-icon.white--text {{item.icon}}
-                    div
-                      h3.title.blue--text {{item.title}}
-                      v-label.text--secondary {{item.title}}
-                v-card-text
-                  p.black--text Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                v-card-actions
-                  v-spacer
-                  v-btn.primary.booking-btn(x-large @click="click") Booking
-                    v-icon assignment_turned_in
+            v-card
+              v-toolbar(flat color="purple" dark)
+                v-toolbar-title Special Deals
+              v-tabs(show-arrows=false)
+                v-tab.purple--text(v-for="(item,i) in items" :key="i") {{item.title}}
+                  v-icon.ml-2.purple--text(left) {{item.icon}}
+                v-tab-item(v-for="(item,i) in items" :key="i")
+                  v-card(flat)
+                    v-card-text
+                      .flex.flex-break
+                        img.event-img(max-width="50%" src="https://freedesignfile.com/upload/2018/08/Bowling-tournament-poster-design-vector-06.jpg")
+                        div.ml-2.mr-2.flex-grow-1
+                          .flex.flex-break
+                            h2.blue--text.event-title {{item.title}}
+                            v-spacer
+                            label.price-label.black--text {{item.price}}
+                          v-divider.mt-2.mb-2
+                          p.black--text {{item.content}}
+                          v-spacer
+                          v-btn.primary.booking-btn.float-right(x-large @click="click") Booking
+                            v-icon assignment_turned_in
+
 </template>
 
 <script lang="ts">
@@ -30,16 +35,33 @@
     data: () => ({
       items: [{
         icon: 'cake',
-        title: 'Tenpin Bowling Party'
+        title: 'Tenpin Bowling Party',
+        content: 'Bring the whole family down for an hour of fun. Only $30 per lane for 1 hour for up to 6 people! (must have at least 1 adult and 1 child under 15)\n' +
+          'Monday to Friday 4pm-6pm & Sundays 9:30am-11:30am',
+        price: '$30 per hour'
       }, {
         icon: 'local_dining',
-        title: 'Tenpin Bowling Dinning'
+        title: 'Rent a Lane (per lane)',
+        content: 'Take some time out during the week with this great deal. Only $40 per lane for 1 hour for up to 6 people!\n' +
+          'Monday to Friday 10am-4pm (not valid School or Public Holidays)',
+        price: '$40 per hour'
       },{
         icon: 'local_pizza',
-        title: 'Tenpin Bowling Pizza'
+        title: 'Bowl till you drop (per person)',
+        content:'Sundays, Mondays & Tuesdays 7.30pm-11.30pm\n' +
+          '4 hours unlimited bowling. Minimum 3 bowlers per lane',
+        price: '$22 (for 4 hours)'
       },{
         icon: 'local_cafe',
-        title: 'Tenpin Bowling Cafe'
+        title: 'Disco Bowling (per person)',
+        content: 'Friday & Saturday Nights from 8.30pm\n' +
+          'A free drink from the bar with 3 games per person purchased!',
+        price: 'Price Varies'
+      },{
+        icon: 'local_cafe',
+        title: 'Late Night Out',
+        content: 'No one looks back on life and remembers the nights they got plenty of sleep! Two Games for the price of one (per person) Friday & Saturday Nights from 9.30pm (games must be completed by Midnight)',
+        price: 'Buy 1 game, get your 2nd game FREE'
       }],
       window: 0
     }),
@@ -64,4 +86,17 @@
     top 94px!important
   .box-shadow
     box-shadow 0 2px 1px -1px rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 1px 3px 0 rgba(0,0,0,.12)
+  .event-img
+    max-width 350px
+    width 100%
+  @media (max-width:768px)
+    .flex-break
+      display block
+    .v-responsive.v-image
+        flex-wrap wrap
+        width 100%
+    .event-img
+      max-width 100%
+    .event-title
+      margin-bottom 4px
 </style>
