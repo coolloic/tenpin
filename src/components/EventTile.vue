@@ -16,7 +16,8 @@
                 v-card-text
                   p.black--text Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                 v-card-actions
-                  v-btn.primary(x-large) Booking
+                  v-btn.primary.booking-btn(x-large @click="click") Booking
+                    v-icon assignment_turned_in
 </template>
 
 <script lang="ts">
@@ -43,7 +44,11 @@
     }),
     watch: {},
 
-    methods: {},
+    methods: {
+      click(){
+        this.$emit('click',{})
+      }
+    },
     computed: {}
   });
 </script>

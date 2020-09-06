@@ -38,7 +38,7 @@
     v-container
       v-row(cols="12" md="8" sm="12")
         v-col(lg="3" md="4" sm="6" v-for="item in pricesData")
-          tile(v-bind="item")
+          tile(v-bind="item" @click="dialog = !dialog")
 
   mixin parallax-banner
     v-container
@@ -75,7 +75,7 @@
       carousel
       .width-1440
         +parallax-banner
-        event-tile
+        event-tile(@click="dialog = !dialog")
         +price-tiles
     +booking-button
     t-footer
@@ -107,28 +107,100 @@
           title: 'Individual rates',
           tag: '<strong>1</strong>Game',
           subtitle: 'Number 10',
-          content: 'Whitsunday Island, Whitsunday Islands',
+          content: [{
+            field: 'Adults',
+            price: '$13.50'
+          },{
+            field: 'Students/Seniors (over 60 years)',
+            price: '$12.50'
+          },{
+            field: 'Children (under 15 years)',
+            price: '$11.50'
+          },{
+            field: 'Frequent Bowlers Club Member',
+            price: '$10.00'
+          },{
+            field: 'Special Needs',
+            price: '$7.50'
+          },{
+            field: 'League Member',
+            price: '$5'
+          }],
           href: '#'
         }, {
           img: 'https://freedesignfile.com/upload/2018/08/Bowling-tournament-poster-design-vector-06.jpg',
           title: 'Individual rates',
           tag: '<strong>2</strong>Games',
           subtitle: 'Number 10',
-          content: 'Whitsunday Island, Whitsunday Islands',
+          content: [{
+            field: 'Adults',
+            price: '$13.50'
+          },{
+            field: 'Students/Seniors (over 60 years)',
+            price: '$12.50'
+          },{
+            field: 'Children (under 15 years)',
+            price: '$11.50'
+          },{
+            field: 'Frequent Bowlers Club Member',
+            price: '$10.00'
+          },{
+            field: 'Special Needs',
+            price: '$7.50'
+          },{
+            field: 'League Member',
+            price: '$5'
+          }],
           href: '#'
         }, {
           img: 'https://img.pixers.pics/pho_wat(s3:700/FO/43/69/31/57/700_FO43693157_1cb14d96c24a9d9b4702ebf563b9ca3b.jpg,700,700,cms:2018/10/5bd1b6b8d04b8_220x50-watermark.png,over,480,650,jpg)/posters-bowling-strike-bunt.jpg.jpg',
           title: 'Individual rates',
           tag: '<strong>3</strong>Games',
           subtitle: 'Number 10',
-          content: 'Whitsunday Island, Whitsunday Islands',
+          content: [{
+            field: 'Adults',
+            price: '$13.50'
+          },{
+            field: 'Students/Seniors (over 60 years)',
+            price: '$12.50'
+          },{
+            field: 'Children (under 15 years)',
+            price: '$11.50'
+          },{
+            field: 'Frequent Bowlers Club Member',
+            price: '$10.00'
+          },{
+            field: 'Special Needs',
+            price: '$7.50'
+          },{
+            field: 'League Member',
+            price: '$5'
+          }],
           href: '#'
         }, {
           img: 'https://freedesignfile.com/upload/2018/08/Bowling-tournament-poster-design-vector-06.jpg',
           title: 'Individual rates',
           tag: '<strong>3</strong>Games',
           subtitle: 'Number 10',
-          content: 'Whitsunday Island, Whitsunday Islands',
+          content: [{
+            field: 'Adults',
+            price: '$13.50'
+          },{
+            field: 'Students/Seniors (over 60 years)',
+            price: '$12.50'
+          },{
+            field: 'Children (under 15 years)',
+            price: '$11.50'
+          },{
+            field: 'Frequent Bowlers Club Member',
+            price: '$10.00'
+          },{
+            field: 'Special Needs',
+            price: '$7.50'
+          },{
+            field: 'League Member',
+            price: '$5'
+          }],
           href: '#'
         }],
         dialog: false,

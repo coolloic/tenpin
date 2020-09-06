@@ -4,12 +4,16 @@
       v-card-title.box-shadow.text-shadow(v-if="title") {{title}}
         v-spacer
     v-btn.blue.white--text.tile-badge(large v-html="tag" rounded absolute right)
-    v-card-subtitle.pb-0(v-if="subtitle") {{subtitle}}
-    v-card-text.text--primary(v-if="content")
-      p.black--text {{content}}
+    v-card-subtitle.pb-0(v-if="false") {{subtitle}}
+    v-card-text.pb-0.text--primary(v-if="content")
+      v-list
+        v-list-item.pa-2.table-item(v-for="(item,i) in content" :key="i")
+          v-list-item-content.price-field.pt-0.pb-0 {{item.field}}
+          v-list-item-content.align-end.pt-0.pb-0.orange--text.price-label {{item.price}}
     v-card-actions
-      v-btn(text color="blue") Read More
-
+      v-spacer
+      v-btn.blue.booking-btn(text color="white" outlined @click="click") Booking
+        v-icon.ml-1 assignment_turned_in
 </template>
 
 <script lang="ts">
@@ -19,6 +23,11 @@
     name: 'Tile',
     props: ['img', 'title', 'subtitle', 'content', 'tag'],
     data: () => ({}),
+    methods: {
+      click() {
+        this.$emit('click', {})
+      }
+    }
   });
 </script>
 <style lang="stylus">
@@ -37,6 +46,20 @@
         margin-left -12px
         line-height 28px
         text-shadow 1px 1px 1px #ccc;
+
   .text-shadow
     text-shadow 1px 1px 2px #000
+
+  .price-field
+    flex-grow 4 !important
+
+  .table-item:nth-child(2n)
+    background #eee
+
+  .price-label
+    font-weight bold
+    font-size 120%
+  @media (max-width: 768px)
+    .booking-btn
+      width 100%!important
 </style>

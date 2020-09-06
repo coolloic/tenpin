@@ -40,6 +40,7 @@
           @blur="date = parseDate(dateFormatted)"
           v-on="on")
       v-date-picker(v-model="date" no-title @input="menu1 = false")
+    v-textarea.mt-1(outlined label="Comment" dense hide-details)
     v-checkbox(
       v-model="checkbox"
       :rules="[v => !!v || 'You must agree to continue!']"
