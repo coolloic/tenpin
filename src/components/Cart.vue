@@ -86,7 +86,9 @@
         display block
 
       &__desc
-        font-size .6rem
+        font-size .65rem
+        font-weight bold
+        line-height 1
         min-height 27px
 
       &__subtitle
