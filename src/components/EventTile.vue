@@ -67,6 +67,7 @@
     word-break normal
   .flex
     display flex
+    align-items center
   .sticky
     position sticky!important
     align-self baseline

@@ -21,6 +21,7 @@
       v-img.logo(:src="logo" max-width="60px")
       v-app-bar-nav-icon(@click.stop="drawer = !drawer")
       v-spacer
+      label.orange--text.bold(v-if="totalPrice") ${{totalPrice}}.00
       v-tooltip(v-model="bookingIcon" bottom )
         template(v-slot:activator="{on, attrs}")
           v-btn(icon v-bind="attrs" v-on="on" @click="dialog = !dialog"): v-icon assignment_turned_in
@@ -77,6 +78,19 @@
         +parallax-banner
         event-tile(@click="dialog = !dialog")
         +price-tiles
+        v-expansion-panels.container: v-expansion-panel
+          v-expansion-panel-header
+            h3 Price Calculator
+          v-expansion-panel-content
+            v-divider
+            v-form(ref="priceForm")
+              v-row(cols="12")
+                v-col(lg="3" md="6" sm="12" v-for="(item,i) in priceTiles" :key="i")
+                  cart(v-bind="item" @update="update" :id="i")
+              v-divider
+              v-row(cols="12")
+                v-col(cols=12)
+                  h3.float-right Total: ${{totalPrice}}.00
         .container
           v-card: iframe(src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3201.570454376782!2d174.74292801582047!3d-36.63672487998243!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d0d2511a8e9fcf5%3A0x3a8d36ec8a94528!2s14%20Link%20Crescent%2C%20Stanmore%20Bay%2C%20Auckland%200932!5e0!3m2!1sen!2snz!4v1599806836134!5m2!1sen!2snz" width="100%" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0")
     +booking-button
@@ -91,7 +105,7 @@
   import Booking from '@/components/Booking';
   import EventTile from '@/components/EventTile';
   import Parallax from '@/components/Parallax';
-  import Map from '@/components/Map';
+  import Cart from '@/components/Cart';
 
   export default {
     name: 'home',
@@ -102,10 +116,11 @@
       Booking,
       Parallax,
       EventTile,
-      Map
+      Cart
     },
     data: () => {
       return {
+        totalPrice: 0,
         logo: require('../assets/logo_v.jpg'),
         simpleLogo: require('../assets/logo-icon.png'),
         pricesData: [{
@@ -136,16 +151,16 @@
           subtitle: 'Number 10',
           content: [{
             field: 'Adults',
-            price: '$6.00'
+            price: '$18.00'
           },{
             field: 'Students',
-            price: '$6.00'
+            price: '$16.00'
           },{
             field: 'Children (under 13 years) and Seniors',
-            price: '$6.00'
+            price: '$15.00'
           },{
             field: 'Under 5s and Disabled',
-            price: '$6.00'
+            price: '$12.00'
           }],
           href: '#'
         }, {
@@ -156,16 +171,16 @@
           subtitle: 'Number 10',
           content: [{
             field: 'Adults',
-            price: '$5.00'
+            price: '$23.00'
           },{
             field: 'Students',
-            price: '$5.00'
+            price: '$21.00'
           },{
             field: 'Children (under 13 years) and Seniors',
-            price: '$5.00'
+            price: '$20.00'
           },{
             field: 'Under 5s and Disabled',
-            price: '$5.00'
+            price: '$17.00'
           }],
           href: '#'
         }, {
@@ -231,6 +246,100 @@
         }, {
           icon: 'contact_mail',
           name: 'Contact Us',
+        }],
+        priceTiles: [{
+          img: require('../assets/bowling_3.jpg'),
+          price: 12,
+          desc: 'Adults',
+          subtitle: `<strong>1</strong> Games`,
+          cls: 'orange'
+        }, {
+          img: require('../assets/bowling_3.jpg'),
+          price: 10,
+          desc: 'Students',
+          subtitle: `<strong>1</strong> Games`,
+          cls: 'orange'
+        }, {
+          img: require('../assets/bowling_3.jpg'),
+          price: 9,
+          desc: 'Children < 13 & Seniors',
+          subtitle: `<strong>1</strong> Games`,
+          cls: 'orange'
+        }, {
+          img: require('../assets/bowling_3.jpg'),
+          price: 6,
+          desc: 'Under 5s & Disabled',
+          subtitle: `<strong>1</strong> Games`,
+          cls: 'orange'
+        }, {
+          img: require('../assets/bowling_3.jpg'),
+          price: 18,
+          desc: 'Adults',
+          subtitle: `<strong>2</strong> Games`,
+          cls: 'green'
+        }, {
+          img: require('../assets/bowling_3.jpg'),
+          price: 16,
+          desc: 'Students',
+          subtitle: `<strong>2</strong> Games`,
+          cls: 'green'
+        }, {
+          img: require('../assets/bowling_3.jpg'),
+          price: 15,
+          desc: 'Children < 13 & Seniors',
+          subtitle: `<strong>2</strong> Games`,
+          cls: 'green'
+        }, {
+          img: require('../assets/bowling_3.jpg'),
+          price: 12,
+          desc: 'Under 5s & Disabled',
+          subtitle: `<strong>2</strong> Games`,
+          cls: 'green'
+        }, {
+          img: require('../assets/bowling_3.jpg'),
+          price: 23,
+          desc: 'Adults',
+          subtitle: `<strong>3</strong> Games`,
+          cls: 'purple'
+        }, {
+          img: require('../assets/bowling_3.jpg'),
+          price: 21,
+          desc: 'Students',
+          subtitle: `<strong>3</strong> Games`,
+          cls: 'purple'
+        }, {
+          img: require('../assets/bowling_3.jpg'),
+          price: 20,
+          desc: 'Children < 13 & Seniors',
+          subtitle: `<strong>3</strong> Games`,
+          cls: 'purple'
+        }, {
+          img: require('../assets/bowling_3.jpg'),
+          price: 17,
+          desc: 'Under 5s & Disabled',
+          subtitle: `<strong>3</strong> Games`,
+          cls: 'purple'
+        }, {
+          img: require('../assets/pool_3.jpg'),
+          price: 6,
+          desc: 'Pool Table',
+          subtitle: '30 Mins',
+          cls: 'orange',
+          unit: 30
+        }, {
+          img: require('../assets/pool_3.jpg'),
+          price: 10,
+          desc: 'Pool Table',
+          subtitle: '60 mins',
+          cls: 'green',
+          unit: 60
+        }, {
+          img: require('../assets/game_1.jpg'),
+          price: 10,
+          desc: 'Arcade Games',
+          subtitle: '13 Toks',
+          cls: 'orange',
+          unit: 13
         }]
       };
     },
@@ -243,9 +352,20 @@
       click: function (item) {
         switch (item.icon) {
           case 'assignment_turned_in':
-          default:
             this.dialog = !this.dialog;
         }
+      },
+      update: function ({ selected, total, increase }) {
+        let totalPrice = this.totalPrice || 0;
+        total = total || 0;
+        if (selected && increase) {
+          totalPrice += Number(increase);
+        } else if (selected) {
+          totalPrice += Number(total);
+        } else {
+          totalPrice -= Number(total);
+        }
+        this.totalPrice = totalPrice;
       }
     }
   };
