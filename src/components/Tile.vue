@@ -1,7 +1,7 @@
 <template lang="pug">
   v-card
     v-img.white--text.align-end.flex(:src="img")
-      v-card-title.box-shadow.text-shadow(v-if="title") {{title}}
+      v-card-title.box-shadow(v-if="title" :class="className") {{title}}
         v-spacer
     v-btn.primary.white--text.tile-badge(large v-html="tag" rounded absolute right @click="click")
     v-card-subtitle.pb-0(v-if="false") {{subtitle}}
@@ -21,7 +21,7 @@
 
   export default Vue.extend({
     name: 'Tile',
-    props: ['img', 'title', 'subtitle', 'content', 'tag'],
+    props: ['img', 'title', 'subtitle', 'content', 'tag', 'className'],
     data: () => ({}),
     methods: {
       click() {
@@ -45,7 +45,7 @@
         margin-right 3px
         margin-left -12px
         line-height 28px
-        text-shadow 1px 1px 1px #ccc;
+        text-shadow 0 -0.05em 0.2em #FFF, 0.01em -0.02em 0.15em #FE0, 0.01em -0.05em 0.15em #FC0, 0.02em -0.15em 0.2em #F90, 0.04em -0.2em 0.3em #F70, 0.05em -0.25em 0.4em #F70, 0.06em -0.2em 0.9em #F50, 0.1em -0.1em 1em #F40
 
   .text-shadow
     text-shadow 1px 1px 2px #000

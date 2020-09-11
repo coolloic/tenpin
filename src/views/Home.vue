@@ -1,8 +1,8 @@
 <template lang="pug">
   mixin nav-drawer
     v-navigation-drawer(v-model="drawer" fixed left temporary)
-      .light-blue.pt-2.pb-2
-        v-img.ml-4.mr-4(src="https://pins.co.nz/wp-content/uploads/2015/06/pins-logo.png" max-width="100")
+      .pt-2.pb-2
+        v-img.ml-4.mr-4(:src="logo" max-width="100")
       v-divider
       v-list(nav)
         v-list-item-group(active-class="blue--text text--accent-4")
@@ -17,8 +17,8 @@
         v-card-text.pa-2: booking
 
   mixin app-bar
-    v-app-bar.sticky-app-bar.app-bar(dark outlined fixed)
-      v-img.logo(src="https://pins.co.nz/wp-content/uploads/2015/06/pins-logo.png" max-width="60px")
+    v-app-bar.sticky-app-bar.app-bar(outlined fixed)
+      v-img.logo(:src="logo" max-width="60px")
       v-app-bar-nav-icon(@click.stop="drawer = !drawer")
       v-spacer
       v-tooltip(v-model="bookingIcon" bottom )
@@ -63,9 +63,9 @@
         v-chip.pa-2.white--text.transparent(small link)
           v-icon.white--text.map-icon map
           label 14 Link Crescent, Stanmore Bay
-        v-chip.pa-2.ml-2.blue.lighten-5.blue--text(href="tel: 0800 666 666" small)
+        v-chip.pa-2.ml-2.blue.lighten-5.blue--text(href="tel: 09 428 2469" small)
           v-icon.blue--text phone
-          label 0800 666 666
+          label (09) 428 2469
   v-app#inspire
     +system-bar
     +app-bar
@@ -77,6 +77,8 @@
         +parallax-banner
         event-tile(@click="dialog = !dialog")
         +price-tiles
+        .container
+          v-card: iframe(src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3201.570454376782!2d174.74292801582047!3d-36.63672487998243!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d0d2511a8e9fcf5%3A0x3a8d36ec8a94528!2s14%20Link%20Crescent%2C%20Stanmore%20Bay%2C%20Auckland%200932!5e0!3m2!1sen!2snz!4v1599806836134!5m2!1sen!2snz" width="100%" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0")
     +booking-button
     t-footer
 
@@ -89,6 +91,7 @@
   import Booking from '@/components/Booking';
   import EventTile from '@/components/EventTile';
   import Parallax from '@/components/Parallax';
+  import Map from '@/components/Map';
 
   export default {
     name: 'home',
@@ -98,131 +101,103 @@
       Tile,
       Booking,
       Parallax,
-      EventTile
+      EventTile,
+      Map
     },
     data: () => {
       return {
+        logo: require('../assets/logo_v.jpg'),
+        simpleLogo: require('../assets/logo-icon.png'),
         pricesData: [{
-          img: 'https://img.pixers.pics/pho_wat(s3:700/FO/43/69/31/57/700_FO43693157_1cb14d96c24a9d9b4702ebf563b9ca3b.jpg,700,700,cms:2018/10/5bd1b6b8d04b8_220x50-watermark.png,over,480,650,jpg)/posters-bowling-strike-bunt.jpg.jpg',
-          title: 'Individual rates',
+          img: require('../assets/bowling_2.jpg'),
+          title: 'Bowling',
+          className: 'font-effect-3d',
           tag: '<strong>1</strong>Game',
           subtitle: 'Number 10',
           content: [{
             field: 'Adults',
-            price: '$13.50'
+            price: '$12.00'
           },{
-            field: 'Students/Seniors (over 60 years)',
-            price: '$12.50'
-          },{
-            field: 'Children (under 15 years)',
-            price: '$11.50'
-          },{
-            field: 'Frequent Bowlers Club Member',
+            field: 'Students',
             price: '$10.00'
           },{
-            field: 'Special Needs',
-            price: '$7.50'
+            field: 'Children (under 13 years) and Seniors',
+            price: '$9.00'
           },{
-            field: 'League Member',
-            price: '$5'
+            field: 'Under 5s and Disabled',
+            price: '$6.00'
           }],
           href: '#'
         }, {
-          img: 'https://freedesignfile.com/upload/2018/08/Bowling-tournament-poster-design-vector-06.jpg',
-          title: 'Individual rates',
+          img: require('../assets/bowling_1.jpg'),
+          title: 'Bowling',
+          className: 'font-effect-3d',
           tag: '<strong>2</strong>Games',
           subtitle: 'Number 10',
           content: [{
             field: 'Adults',
-            price: '$22.00'
+            price: '$6.00'
           },{
-            field: 'Students/Seniors (over 60 years)',
-            price: '$20.00'
+            field: 'Students',
+            price: '$6.00'
           },{
-            field: 'Children (under 15 years)',
-            price: '$18.00'
+            field: 'Children (under 13 years) and Seniors',
+            price: '$6.00'
           },{
-            field: 'Frequent Bowlers Club Member',
-            price: '$16.00'
-          },{
-            field: 'Special Needs',
-            price: '$15.00'
-          },{
-            field: 'League Member',
-            price: '$10'
+            field: 'Under 5s and Disabled',
+            price: '$6.00'
           }],
           href: '#'
         }, {
-          img: 'https://img.pixers.pics/pho_wat(s3:700/FO/43/69/31/57/700_FO43693157_1cb14d96c24a9d9b4702ebf563b9ca3b.jpg,700,700,cms:2018/10/5bd1b6b8d04b8_220x50-watermark.png,over,480,650,jpg)/posters-bowling-strike-bunt.jpg.jpg',
-          title: 'Individual rates',
+          img: require('../assets/bowling_4.jpg'),
+          title: 'Bowling',
+          className: 'font-effect-3d',
           tag: '<strong>3</strong>Games',
           subtitle: 'Number 10',
           content: [{
             field: 'Adults',
-            price: '$28.00'
+            price: '$5.00'
           },{
-            field: 'Students/Seniors (over 60 years)',
-            price: '$26.00'
+            field: 'Students',
+            price: '$5.00'
           },{
-            field: 'Children (under 15 years)',
-            price: '$24.00'
+            field: 'Children (under 13 years) and Seniors',
+            price: '$5.00'
           },{
-            field: 'Frequent Bowlers Club Member',
-            price: '$21.00'
-          },{
-            field: 'Special Needs',
-            price: '$20.00'
-          },{
-            field: 'League Member',
-            price: '$15'
+            field: 'Under 5s and Disabled',
+            price: '$5.00'
           }],
           href: '#'
         }, {
-          img: 'https://freedesignfile.com/upload/2018/08/Bowling-tournament-poster-design-vector-06.jpg',
-          title: 'Group rates',
-          tag: '<strong>1</strong>Game',
+          img: require('../assets/pool_1.jpg'),
+          title: 'Pool Table',
+          className: 'font-effect-fire',
+          tag: '<strong>30</strong>MIN',
           subtitle: 'Number 10',
           content: [{
-            field: 'Family (2 Adults/2 Children)',
-            price: '$46.00'
-          },{
-            field: 'School Groups (per person) Valid during School Hours only',
-            price: '$8.00'
-          },{
-            field: 'School Holiday Programmes (valid Monday to Friday till 4pm. Only Valid during school holidays. Registered Holiday programmes only. Bookings ESSENTIAL',
-            price: '$8.50'
+            field: '30 minutes',
+            price: '$6.00'
+          }]
+        },{
+          img: require('../assets/pool_2.jpg'),
+          title: 'Pool Table',
+          className: 'font-effect-fire',
+          tag: '<strong>60</strong>MIN',
+          subtitle: 'Number 10',
+          content: [{
+            field: '60 minutes',
+            price: '$10.00'
           }],
           href: '#'
         },{
-          img: 'https://freedesignfile.com/upload/2018/08/Bowling-tournament-poster-design-vector-06.jpg',
-          title: 'Group rates',
-          tag: '<strong>2</strong>Games',
+          img: require('../assets/game_1.jpg'),
+          title: 'Arcade Games',
+          className: 'font-effect-neon monoton-font',
+          tag: '<strong>10</strong> for 13 Tokens',
           subtitle: 'Number 10',
           content: [{
-            field: 'Family (2 Adults/2 Children)',
-            price: '$72.00'
-          },{
-            field: 'School Groups (per person) Valid during School Hours only',
-            price: '$14.00'
-          },{
-            field: 'School Holiday Programmes (valid Monday to Friday till 4pm. Only Valid during school holidays. Registered Holiday programmes only. Bookings ESSENTIAL',
-            price: '$14.00'
-          }],
-          href: '#'
-        },{
-          img: 'https://freedesignfile.com/upload/2018/08/Bowling-tournament-poster-design-vector-06.jpg',
-          title: 'Group rates',
-          tag: '<strong>3</strong>Games',
-          subtitle: 'Number 10',
-          content: [{
-            field: 'Family (2 Adults/2 Children)',
-            price: '$96.00'
-          },{
-            field: 'School Groups (per person) Valid during School Hours only',
-            price: '$20.00'
-          },{
-            field: 'School Holiday Programmes (valid Monday to Friday till 4pm. Only Valid during school holidays. Registered Holiday programmes only. Bookings ESSENTIAL',
-            price: '$20.00'
+            field: '13 Tokens',
+            price: '$10.00'
           }],
           href: '#'
         }],
@@ -276,6 +251,10 @@
   };
 </script>
 <style lang="stylus">
+  .rancho-font
+    font-family Rancho, Roboto, sans-serif
+  .monoton-font
+    font-family Monoton, Roboto, sans-serif
   .mt-84
     margin-top 84px
   .app-bar
@@ -296,8 +275,6 @@
   .border-bt
     border-bottom 1px solid #eee
   @media (max-width: 768px)
-    .logo
-      display none!important
     .v-dialog
       margin 8px!important
   @media (max-width: 320px)
