@@ -44,7 +44,8 @@
   mixin parallax-banner
     v-container
       v-row(cols="12"): v-col(cols="12")
-        parallax(height="400" img="https://cdn.vuetifyjs.com/images/parallax/material2.jpg" @click="dialog = !dialog")
+        v-card
+          parallax(height="400" img="https://cdn.vuetifyjs.com/images/parallax/material2.jpg" @click="dialog = !dialog")
 
   mixin booking-button
     v-btn(
@@ -67,6 +68,26 @@
         v-chip.pa-2.ml-2.blue.lighten-5.blue--text(href="tel: 09 428 2469" small)
           v-icon.blue--text phone
           label (09) 428 2469
+
+  mixin calculator
+    v-expansion-panels.container: v-expansion-panel
+      v-expansion-panel-header
+        h3 Price Calculator
+      v-expansion-panel-content
+        v-divider
+        v-form(ref="priceForm")
+          v-row(cols="12")
+            v-col(lg="3" md="6" sm="12" v-for="(item,i) in priceTiles" :key="i")
+              cart(v-bind="item" @update="update" :id="i")
+          v-divider
+          v-row(cols="12")
+            v-col(cols=12)
+              v-btn.secondary.cart-reset-btn(@click="resetCalc") reset
+              v-btn.primary.cart-booking-btn(@click="dialog = !dialog") Booking
+                v-icon assignment_turned_in
+              h3.float-right.cart-total-price(v-html="computedTotalPrice")
+
+
   v-app#inspire
     +system-bar
     +app-bar
@@ -75,23 +96,10 @@
     v-content.mt-84
       carousel
       .width-1440
+        +calculator
         +parallax-banner
         event-tile(@click="dialog = !dialog")
         +price-tiles
-        v-expansion-panels.container: v-expansion-panel
-          v-expansion-panel-header
-            h3 Price Calculator
-          v-expansion-panel-content
-            v-divider
-            v-form(ref="priceForm")
-              v-row(cols="12")
-                v-col(lg="3" md="6" sm="12" v-for="(item,i) in priceTiles" :key="i")
-                  cart(v-bind="item" @update="update" :id="i")
-              v-divider
-              v-row(cols="12")
-                v-col(cols=12)
-                  v-btn.secondary(@click="resetCalc") reset
-                  h3.float-right Total: ${{totalPrice}}.00
         .container
           v-card: iframe(src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3201.570454376782!2d174.74292801582047!3d-36.63672487998243!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d0d2511a8e9fcf5%3A0x3a8d36ec8a94528!2s14%20Link%20Crescent%2C%20Stanmore%20Bay%2C%20Auckland%200932!5e0!3m2!1sen!2snz!4v1599806836134!5m2!1sen!2snz" width="100%" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0")
     +booking-button
@@ -349,6 +357,11 @@
         this.drawer = false;
       }
     },
+    computed: {
+      computedTotalPrice() {
+        return `Total: <strong class="orange--text">$${this.totalPrice}.00</strong>`
+      }
+    },
     methods: {
       click: function (item) {
         switch (item.icon) {
@@ -399,9 +412,19 @@
     margin auto
   .border-bt
     border-bottom 1px solid #eee
+  .cart-booking-btn
+    margin-left: 8px;
   @media (max-width: 768px)
     .v-dialog
       margin 8px!important
+    .cart-booking-btn
+      margin-left 0px
+      margin-top 8px
+      width 100%
+    .cart-total-price
+      margin-top 8px
+    .cart-reset-btn
+      width 100%
   @media (max-width: 320px)
     .map-icon
       display none!important

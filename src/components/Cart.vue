@@ -1,6 +1,6 @@
 <template lang="pug">
-  v-card.v-sheet.pa-2(:class="`v-tile tile-${cls}`")
-    .shop-card.white
+  v-card.v-sheet.pa-2(:class="`v-tile tile-${cls} ${selected ? 'selected-card' : ''}`")
+    .shop-card.white(:class="")
       img.shop-card__badge(:src="img")
       .shop-card__header.ml-1.mr-1
         h3.shop-card__header__title.orange--text.mb-2 ${{price}}.00
@@ -9,13 +9,14 @@
         h5.shop-card__header__subtitle.pa-0.ma-0(v-html="subtitle")
       v-divider(vertical)
       .shop-card__form.ml-2
-        h5(v-if="unit === 30") {{time}}
-        h5(v-else-if="unit === 60") {{amount}}h
-        h5(v-else-if="unit === 13") {{amount * 13}} Toks
-        h5(v-else) {{amount}} {{amount > 1 ? 'People' : 'Person' }}
-        label.shor-card__price.green--text.bold(:data="[id,selected,total]") ${{total}}.00
+        label.shor-card__price.green--text.bold(v-if="amount !== 0" :data="[id,selected,total]") ${{total}}.00
+        h5(v-if="unit === 30 && amount !== 0") {{time}}
+        h5(v-else-if="unit === 60 && amount !== 0") {{amount}}h
+        h5(v-else-if="unit === 13 && amount !== 0") {{amount * 13}} Toks
+        h5(v-else-if="amount !== 0") {{amount}} {{amount > 1 ? 'People' : 'Person' }}
         v-checkbox.shop-card__form__checkbox.ml-1.mt-0.mb-0.pa-0(v-model="selected" :class="`checkbox_${id}`")
-        v-slider.shop-card__form__slider(v-model="amount" min=0 max=20 thumb-label thumb-size=20 hide-details)
+        v-slider.shop-card__form__slider.blue--text.pa-0(v-model="amount" min=0 max=20 thumb-label thumb-size=20 hide-details
+        append-icon="add_circle" prepend-icon="remove_circle" @click:append="increase" @click:prepend="reduce" thumb-color="blue")
 
 
 </template>
@@ -45,13 +46,21 @@
         }
       }
     },
+    methods: {
+      increase() {
+        this.amount = this.amount + 1 > 20 ? 20 : (this.amount + 1);
+      },
+      reduce() {
+        this.amount = this.amount - 1 < 1 ? 0 : this.amount - 1;
+      }
+    },
     computed: {
       total() {
         return Number(this.amount) * Number(this.price);
       },
       time() {
-        let h = this.amount / 2;
-        let m = this.amount % 2;
+        let h = Number(this.amount) / 2;
+        let m = Number(this.amount) % 2;
         let text = ''
         if (h === 1) {
           text = '1h'
@@ -125,6 +134,11 @@
         bottom 0
         right 0
         width 100%
+        .v-input__prepend-outer,.v-input__append-outer
+          margin-right 0!important
+          margin-left 0!important
+          i
+            color #2196f3
 
   .v-tile
     &:before
