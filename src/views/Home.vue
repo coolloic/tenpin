@@ -36,13 +36,13 @@
         span Search
 
   mixin price-tiles
-    v-container
+    v-container#extension
       v-row(cols="12" md="8" sm="12")
         v-col(lg="4" md="4" sm="6" v-for="item in pricesData")
           tile(v-bind="item" @click="dialog = !dialog")
 
   mixin parallax-banner
-    v-container
+    v-container#fiber_new
       v-row(cols="12"): v-col(cols="12")
         v-card
           parallax(height="400" img="https://cdn.vuetifyjs.com/images/parallax/material2.jpg" @click="dialog = !dialog")
@@ -70,7 +70,7 @@
           label (09) 428 2469
 
   mixin calculator
-    v-expansion-panels.container: v-expansion-panel
+    v-expansion-panels.container#monetization_on: v-expansion-panel
       v-expansion-panel-header
         h3 Price Calculator
       v-expansion-panel-content
@@ -94,14 +94,17 @@
     +nav-drawer
     +booking-dialog
     v-content.mt-84
-      carousel
+      carousel#home
       .width-1440
         +calculator
         +parallax-banner
-        event-tile(@click="dialog = !dialog")
+        event-tile#cake(@click="dialog = !dialog")
         +price-tiles
-        .container
-          v-card: iframe(src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3201.570454376782!2d174.74292801582047!3d-36.63672487998243!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d0d2511a8e9fcf5%3A0x3a8d36ec8a94528!2s14%20Link%20Crescent%2C%20Stanmore%20Bay%2C%20Auckland%200932!5e0!3m2!1sen!2snz!4v1599806836134!5m2!1sen!2snz" width="100%" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0")
+        .container#contact_mail
+          v-card.contact-panel
+            .contact-tile
+                p (09) 428 2469
+            iframe(src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3201.570454376782!2d174.74292801582047!3d-36.63672487998243!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d0d2511a8e9fcf5%3A0x3a8d36ec8a94528!2s14%20Link%20Crescent%2C%20Stanmore%20Bay%2C%20Auckland%200932!5e0!3m2!1sen!2snz!4v1599806836134!5m2!1sen!2snz" width="100%" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0")
     +booking-button
     t-footer
 
@@ -239,13 +242,10 @@
           name: `What's on`,
         }, {
           icon: 'monetization_on',
-          name: 'Prices',
-        }, {
-          icon: 'people',
-          name: 'Parties',
+          name: 'Price Calculator',
         }, {
           icon: 'cake',
-          name: 'Functions',
+          name: 'Special Deals',
         }, {
           icon: 'extension',
           name: 'Tournaments',
@@ -363,10 +363,32 @@
       }
     },
     methods: {
+      scrollTo: function (id) {
+        const el = document.getElementById(id);
+        if (el) {
+          const offsetTop = el.offsetTop || 0;
+          window.scrollTo({
+            top: offsetTop,
+            left: 0,
+            behavior: 'smooth'
+          });
+        }
+      },
       click: function (item) {
         switch (item.icon) {
           case 'assignment_turned_in':
             this.dialog = !this.dialog;
+            break;
+          case 'monetization_on':
+          case 'people':
+          case 'cake':
+          case 'home':
+          case 'fiber_new':
+          case 'extension':
+          case 'contact_mail':
+            this.drawer = !this.drawer;
+            this.scrollTo(item.icon);
+            break;
         }
       },
       resetCalc: function() {
@@ -389,6 +411,18 @@
   };
 </script>
 <style lang="stylus">
+  .contact-panel
+    position relative
+  .contact-tile
+    padding 9px 4px 9px 11px
+    top 57px
+    left 0
+    position absolute
+    background-color white
+    margin 10px
+    padding 1px
+    box-shadow rgba(0, 0, 0, 0.3) 0px 1px 4px -1px
+    border-radius 2px
   .rancho-font
     font-family Rancho, Roboto, sans-serif
   .monoton-font
@@ -415,6 +449,7 @@
   .cart-booking-btn
     margin-left: 8px;
   @media (max-width: 768px)
+    .contact-tile
     .v-dialog
       margin 8px!important
     .cart-booking-btn
