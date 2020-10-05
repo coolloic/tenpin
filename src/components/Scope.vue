@@ -1,9 +1,9 @@
 <template lang="pug">
   v-parallax.parallax-panel(:height="height" :src="img")
     h1.booking-title.white--text What do we have
-    .mt-4
+    .mt-6.max-500
       v-chip.ma-2(v-for="(item,i) in images")
-        v-avatar
+        v-avatar.play-icon
           v-img( width=50 :src="item.src" :key="i")
         label.bold.ml-1 {{item.title}}
 </template>
@@ -19,12 +19,6 @@
         title: 'Tenpin Bowling',
         src: require('../assets/bowling.svg')
       }, {
-        title:'Food and Beverage',
-        src: require('../assets/food.svg')
-      }, {
-        title: 'Fully Licensed',
-        src: require('../assets/licensed.svg')
-      }, {
         title: 'Gaming Lounge',
         src: require('../assets/lounge.svg')
       }, {
@@ -37,8 +31,14 @@
         title: 'Birthday Party',
         src: require('../assets/party.svg')
       }, {
-        title: 'Business Function',
+        title: 'Business',
         src: require('../assets/business.svg')
+      }, {
+        title: 'Fully Licensed',
+        src: require('../assets/licensed.svg')
+      }, {
+        title:'Food & Drink',
+        src: require('../assets/food.svg')
       }]
     }),
     methods: {
@@ -49,6 +49,12 @@
   });
 </script>
 <style lang="stylus">
+  .max-500
+    max-width 800px
+    margin 0 auto
+    .v-chip
+      width 143px
+      max-width calc(50% - 18px)
   .booking
     &-title
       font-size 2.5rem
@@ -84,7 +90,8 @@
         margin 0 auto
       @media (max-width 768px)
         font-size .7rem
-
+  .play-icon
+    border-radius 0!important
   .parallax-panel
     text-align center
 

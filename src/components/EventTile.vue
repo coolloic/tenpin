@@ -3,9 +3,9 @@
         v-row(align="center" cols="12")
           v-col
             v-card
-              v-toolbar.light-blue(flat dark)
+              v-toolbar.primary(flat dark)
                 v-toolbar-title Birthday Party
-                  .subtitle-2.text--secondary Party room are free to use with booking. We only provide table cloths. You can bring your food and soft drinks. Also, you are welcome to decorate the party room.
+                  .subtitle-2.birth-label Party room are free to use with booking. We only provide table cloths. You can bring your food and soft drinks. Also, you are welcome to decorate the party room.
               v-tabs.event-tabs(show-arrows=false style="min-width: 100%")
                 v-tab.blue--text.darken-5.event-tab(v-for="(item,i) in items" :key="i") {{item.title}}
                   v-icon.ml-2.blue--text.darken-5(left) {{item.icon}}
@@ -14,7 +14,7 @@
                     v-card-text
                       .flex.flex-break
                         img.event-img(max-width="50%" :src="require('../assets/bowling_birthday.jpg')")
-                        div.ml-2.mr-2.flex-grow-1
+                        div.ml-2.mr-2.flex-grow-1.align-normal
                           .flex.flex-break
                             h2.blue--text.event-title {{item.title}}
                             v-spacer
@@ -41,7 +41,7 @@
       items: [{
         icon: 'cake',
         title: 'Bowling + Food',
-        content: ['1 Game - $16 per Child', '2 Games - $22 per child', 'Food Option: <ol><li>Mini Hotdogs</li><li>Chicken Nuggets</li><li>Vegetable Spring Rolls</li><li>Samosas</li></ol><b>(Choose One) + Chips  Per Child</b>'],
+        content: ['1 Game - $16 per Child', '2 Games - $22 per child', 'Food Option: <ol><li>Mini Hotdogs</li><li>Chicken Nuggets</li><li>Vegetable Spring Rolls</li><li>Samosas</li></ol><b>(Choose One) + Chips  Per Child</b>','All paid children will receive a free game voucher which can be used on next visit.'],
         price: ''
       }, {
         icon: 'cake',
@@ -92,6 +92,8 @@
     display none!important
   .stripe .v-list-item:nth-child(2n)
     background #eee
+  .align-normal
+    align-self normal
   @media (max-width:768px)
     .flex-break
       display block

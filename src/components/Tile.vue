@@ -8,7 +8,7 @@
     v-card-text.pb-0.text--primary(v-if="content")
       v-list(:class="tableCls ? tableCls : ''")
         v-list-item.pa-2.table-item(v-for="(item,i) in content" :key="i")
-          v-list-item-content.price-field.pt-0.pb-0 {{item.field}}
+          v-list-item-content.price-field.pt-0.pb-0(v-html="item.field")
           v-list-item-content.align-end.pt-0.pb-0.orange--text.price-label {{item.price}}
     v-card-actions
       v-spacer
@@ -53,6 +53,7 @@
   .price-field
     font-weight bold
     flex-grow 4 !important
+    line-height 1.9
 
   .table-item:nth-child(2n)
     background #eee

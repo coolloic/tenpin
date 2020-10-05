@@ -16,13 +16,13 @@
     data: () => ({
       items: [
         {
-          src: 'https://pins.co.nz/wp-content/uploads/2015/04/top-slider-11.jpg',
+          src: require('../assets/banner-1.jpg'),
         },
         {
-          src: 'https://pins.co.nz/wp-content/uploads/2015/04/top-slider-21.jpg',
+          src: require('../assets/banner-2.jpg'),
         },
         {
-          src: 'https://pins.co.nz/wp-content/uploads/2015/04/top-slider-31.jpg',
+          src: require('../assets/banner-3.jpg'),
         }]
     }),
   });

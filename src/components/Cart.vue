@@ -9,11 +9,11 @@
         h5.shop-card__header__subtitle.pa-0.ma-0(v-html="subtitle")
       v-divider(vertical)
       .shop-card__form.ml-2
-        label.shor-card__price.green--text.bold(v-if="amount !== 0" :data="[id,selected,total]") ${{total}}.00
-        h5(v-if="unit === 30 && amount !== 0") {{time}}
-        h5(v-else-if="unit === 60 && amount !== 0") {{amount}}h
-        h5(v-else-if="unit === 13 && amount !== 0") {{amount * 13}} Toks
-        h5(v-else-if="amount !== 0") {{amount}} {{amount > 1 ? 'People' : 'Person' }}
+        label.shor-card__price.green--text.bold(v-if="amount !== 0 && selected" :data="[id,selected,total]") ${{total}}.00
+        h5(v-if="unit === 30 && amount !== 0 && selected") {{time}}
+        h5(v-else-if="unit === 60 && amount !== 0 && selected") {{amount}}h
+        h5(v-else-if="unit === 13 && amount !== 0 && selected") {{amount * 13}} Toks
+        h5(v-else-if="amount !== 0 && selected") {{amount}} {{amount > 1 ? 'People' : 'Person' }}
         v-checkbox.shop-card__form__checkbox.ml-1.mt-0.mb-0.pa-0(v-model="selected" :class="`checkbox_${id}`")
         v-slider.shop-card__form__slider.blue--text.pa-0(v-model="amount" min=0 max=20 thumb-label thumb-size=20 hide-details
         append-icon="add_circle" prepend-icon="remove_circle" @click:append="increase" @click:prepend="reduce" thumb-color="blue")

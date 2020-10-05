@@ -22,7 +22,7 @@
         v-img.logo(:src="logo" max-width="60px")
         v-app-bar-nav-icon(@click.stop="drawer = !drawer")
         v-spacer
-        label.bold.hidden-sm-and-down Welcom To Whangparaoa Tenpin Bowling
+        label.bold.hidden-sm-and-down Welcome To Whangparaoa Tenpin Bowling
         v-spacer
         label.orange--text.bold(v-if="totalPrice") ${{totalPrice}}.00
         v-tooltip(v-model="bookingIcon" bottom )
@@ -52,7 +52,7 @@
     v-container#fiber_new
       v-row(cols="12"): v-col(cols="12")
         v-card
-          parallax(height="400" img="https://cdn.vuetifyjs.com/images/parallax/material2.jpg" @click="dialog = !dialog")
+          parallax(height="400" :img="require('../assets/material2.jpg')" @click="dialog = !dialog")
 
   mixin booking-button
     v-btn(
@@ -73,17 +73,17 @@
         v-chip.pa-2.white--text.transparent(small link)
           v-icon.white--text.map-icon map
           label 14 Link Crescent, Stanmore Bay
-        v-chip.pa-2.ml-2.blue.lighten-5.blue--text.hidden-sm-and-down(href="tel: 0800836746" small)
+        v-chip.pa-2.ml-2.blue.lighten-5.blue--text(href="tel: 0800836746" small)
           v-icon.blue--text phone
           label 0800 tenpin
-        v-chip.pa-2.ml-2.blue.lighten-5.blue--text(href="tel: 09 428 2469" small)
+        v-chip.pa-2.ml-2.blue.lighten-5.blue--text.hidden-sm-and-down(href="tel: 09 428 2469" small)
           v-icon.blue--text phone
           label (09) 428 2469
 
   mixin calculator
     v-expansion-panels.container#monetization_on: v-expansion-panel
-      v-expansion-panel-header
-        h3 Price Calculator
+      v-expansion-panel-header.primary.theme--light.price-header
+        h3.text--white Price Calculator
       v-expansion-panel-content
         v-divider
         v-form(ref="priceForm")
@@ -101,7 +101,7 @@
   mixin scope-tile
     v-container#fiber_new
       v-row(cols="12"): v-col(cols="12"): v-card
-        scope(height="400" img="https://cdn.vuetifyjs.com/images/parallax/material2.jpg")
+        scope(height="400" :img="require('../assets/material2.jpg')")
   v-app#inspire
     +system-bar
     +app-bar
@@ -220,10 +220,7 @@
             tag: 'Bowling Club',
             subtitle: 'Number 10',
             content: [{
-              field: 'Bowling club will come soon',
-              price: ''
-            },{
-              field: '',
+              field: 'We have Senior Bowling Club on Monday, Tuesday and Friday Mornings now. You are welcome to have a chat with us about their details. <br/>',
               price: ''
             },{
               field: '',
@@ -450,6 +447,9 @@
   };
 </script>
 <style lang="stylus">
+  .price-header
+    h3,i
+      color #fff!important
   .contact-panel
     position relative
     iframe
