@@ -31,27 +31,31 @@
       amount: 0,
       selected: false
     }),
+    methods: {
+      increase() {
+        //@ts-ignore
+        this.amount = this.amount + 1 > 20 ? 20 : (this.amount + 1);
+      },
+      reduce() {
+        //@ts-ignore
+        this.amount = this.amount - 1 < 1 ? 0 : this.amount - 1;
+      }
+    },
     watch: {
       total: {
         immediate: true,
         handler(value, old) {
           let increase = Number(value || 0) - Number(old || 0);
+          //@ts-ignore
           this.$emit('update', {selected: this.selected, increase: increase || 0});
         }
       },
       selected: {
         immediate: true,
         handler(value) {
+          //@ts-ignore
           this.$emit('update', {selected: value, total: this.total});
         }
-      }
-    },
-    methods: {
-      increase() {
-        this.amount = this.amount + 1 > 20 ? 20 : (this.amount + 1);
-      },
-      reduce() {
-        this.amount = this.amount - 1 < 1 ? 0 : this.amount - 1;
       }
     },
     computed: {

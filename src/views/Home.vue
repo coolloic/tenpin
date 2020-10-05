@@ -18,19 +18,22 @@
 
   mixin app-bar
     v-app-bar.sticky-app-bar.app-bar(outlined fixed)
-      v-img.logo(:src="logo" max-width="60px")
-      v-app-bar-nav-icon(@click.stop="drawer = !drawer")
-      v-spacer
-      label.orange--text.bold(v-if="totalPrice") ${{totalPrice}}.00
-      v-tooltip(v-model="bookingIcon" bottom )
-        template(v-slot:activator="{on, attrs}")
-          v-btn(icon v-bind="attrs" v-on="on" @click="dialog = !dialog"): v-icon assignment_turned_in
-        span Make a booking
-      v-tooltip(v-model="newsIcon" bottom)
+      .flex.width-1440
+        v-img.logo(:src="logo" max-width="60px")
+        v-app-bar-nav-icon(@click.stop="drawer = !drawer")
+        v-spacer
+        label.bold.hidden-sm-and-down Welcom To Whangparaoa Tenpin Bowling
+        v-spacer
+        label.orange--text.bold(v-if="totalPrice") ${{totalPrice}}.00
+        v-tooltip(v-model="bookingIcon" bottom )
+          template(v-slot:activator="{on, attrs}")
+            v-btn(icon v-bind="attrs" v-on="on" @click="dialog = !dialog"): v-icon assignment_turned_in
+          span Make a booking
+      //- v-tooltip(v-model="newsIcon" bottom)
         template(v-slot:activator="{on, attrs}")
           v-btn(icon v-bind="attrs" v-on="on"): v-icon fiber_new
         span What's on
-      v-tooltip(v-model="searchIcon" bottom)
+      //- v-tooltip(v-model="searchIcon" bottom)
         template(v-slot:activator="{on, attrs}")
           v-btn(icon v-bind="attrs" v-on="on"): v-icon mdi-magnify
         span Search
@@ -40,7 +43,11 @@
       v-row(cols="12" md="8" sm="12")
         v-col(lg="4" md="4" sm="6" v-for="item in pricesData")
           tile(v-bind="item" @click="dialog = !dialog")
-
+  mixin price-tiles-2
+    v-container#extension
+      v-row(cols="12" md="8" sm="12")
+        v-col(lg="4" md="4" sm="6" v-for="item in pricesData2")
+          tile(v-bind="item" @click="dialog = !dialog")
   mixin parallax-banner
     v-container#fiber_new
       v-row(cols="12"): v-col(cols="12")
@@ -61,10 +68,14 @@
   mixin system-bar
     v-system-bar.sticky-system-bar.blue.lighten-1(fixed)
       .flex.width-1440
+        label.white--text.mr-2.hidden-sm-and-down Monday - Sunday 10:00am - 10:00pm
         v-spacer
         v-chip.pa-2.white--text.transparent(small link)
           v-icon.white--text.map-icon map
           label 14 Link Crescent, Stanmore Bay
+        v-chip.pa-2.ml-2.blue.lighten-5.blue--text.hidden-sm-and-down(href="tel: 0800836746" small)
+          v-icon.blue--text phone
+          label 0800 tenpin
         v-chip.pa-2.ml-2.blue.lighten-5.blue--text(href="tel: 09 428 2469" small)
           v-icon.blue--text phone
           label (09) 428 2469
@@ -87,7 +98,10 @@
                 v-icon assignment_turned_in
               h3.float-right.cart-total-price(v-html="computedTotalPrice")
 
-
+  mixin scope-tile
+    v-container#fiber_new
+      v-row(cols="12"): v-col(cols="12"): v-card
+        scope(height="400" img="https://cdn.vuetifyjs.com/images/parallax/material2.jpg")
   v-app#inspire
     +system-bar
     +app-bar
@@ -96,18 +110,15 @@
     v-content.mt-84
       carousel#home
       .width-1440
-        +calculator
-        +parallax-banner
+        +scope-tile
         event-tile#cake(@click="dialog = !dialog")
         +price-tiles
+        +calculator
+        +price-tiles-2
         .container#contact_mail
           v-card.contact-panel
-            .contact-tile
-                p (09) 428 2469
-            iframe(src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3201.570454376782!2d174.74292801582047!3d-36.63672487998243!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d0d2511a8e9fcf5%3A0x3a8d36ec8a94528!2s14%20Link%20Crescent%2C%20Stanmore%20Bay%2C%20Auckland%200932!5e0!3m2!1sen!2snz!4v1599806836134!5m2!1sen!2snz" width="100%" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0")
+            iframe(src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3201.600805320218!2d174.74309901513973!3d-36.63599447998267!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d0d2511a9c5ae55%3A0x86a37195ea8c8a1a!2sTenpin%20Bowling!5e0!3m2!1sen!2snz!4v1601077648329!5m2!1sen!2snz" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0")
     +booking-button
-    t-footer
-
 </template>
 
 <script>
@@ -118,6 +129,8 @@
   import EventTile from '@/components/EventTile';
   import Parallax from '@/components/Parallax';
   import Cart from '@/components/Cart';
+  import RawBooking from '@/components/RawBooking';
+  import Scope from '@/components/Scope';
 
   export default {
     name: 'home',
@@ -128,7 +141,9 @@
       Booking,
       Parallax,
       EventTile,
-      Cart
+      Cart,
+      RawBooking,
+      Scope
     },
     data: () => {
       return {
@@ -136,7 +151,7 @@
         logo: require('../assets/logo_v.jpg'),
         simpleLogo: require('../assets/logo-icon.png'),
         pricesData: [{
-          img: require('../assets/bowling_2.jpg'),
+          img: require('../assets/bowling_1.jpg'),
           title: 'Bowling',
           className: 'font-effect-3d',
           tag: '<strong>1</strong>Game',
@@ -176,7 +191,7 @@
           }],
           href: '#'
         }, {
-          img: require('../assets/bowling_4.jpg'),
+          img: require('../assets/bowling_1.jpg'),
           title: 'Bowling',
           className: 'font-effect-3d',
           tag: '<strong>3</strong>Games',
@@ -195,39 +210,63 @@
             price: '$17.00'
           }],
           href: '#'
-        }, {
-          img: require('../assets/pool_1.jpg'),
-          title: 'Pool Table',
-          className: 'font-effect-fire',
-          tag: '<strong>30</strong>MIN',
-          subtitle: 'Number 10',
-          content: [{
-            field: '30 minutes',
-            price: '$6.00'
-          }]
-        },{
-          img: require('../assets/pool_2.jpg'),
-          title: 'Pool Table',
-          className: 'font-effect-fire',
-          tag: '<strong>60</strong>MIN',
-          subtitle: 'Number 10',
-          content: [{
-            field: '60 minutes',
-            price: '$10.00'
-          }],
-          href: '#'
-        },{
-          img: require('../assets/game_1.jpg'),
-          title: 'Arcade Games',
-          className: 'font-effect-neon monoton-font',
-          tag: '<strong>10</strong> for 13 Tokens',
-          subtitle: 'Number 10',
-          content: [{
-            field: '13 Tokens',
-            price: '$10.00'
-          }],
-          href: '#'
         }],
+        pricesData2: [
+          {
+            img: require('../assets/bowling_4.jpg'),
+            title: 'Bowling Club',
+            className: 'font-effect-fire',
+            tableCls: 'no-stripe',
+            tag: 'Bowling Club',
+            subtitle: 'Number 10',
+            content: [{
+              field: 'Bowling club will come soon',
+              price: ''
+            },{
+              field: '',
+              price: ''
+            },{
+              field: '',
+              price: ''
+            }]
+          },{
+            img: require('../assets/pool_2.jpg'),
+            title: 'Pool Table',
+            className: 'font-effect-fire',
+            tag: 'Pool Deal',
+            subtitle: 'Number 10',
+            content: [{
+              field: '15 minutes',
+              price: '$3.00'
+            },{
+              field: '30 minutes',
+              price: '$6.00'
+            },{
+              field: '60 minutes',
+              price: '$10.00'
+            }],
+            href: '#'
+          },{
+            img: require('../assets/game_1.jpg'),
+            title: 'Arcade Games',
+            className: 'font-effect-neon monoton-font',
+            tag: 'Token Deal',
+            subtitle: 'Number 10',
+            tableCls: 'no-stripe',
+            hideBtn: false,
+            content: [{
+              field: '13 Tokens',
+              price: '$10.00'
+            },{
+              field: '',
+              price: ''
+            },{
+              field: '',
+              price: ''
+            }],
+            href: '#'
+          }
+        ],
         dialog: false,
         bookingIcon: false,
         newsIcon: false,
@@ -245,7 +284,7 @@
           name: 'Price Calculator',
         }, {
           icon: 'cake',
-          name: 'Special Deals',
+          name: 'Birthday Party',
         }, {
           icon: 'extension',
           name: 'Tournaments',
@@ -413,6 +452,8 @@
 <style lang="stylus">
   .contact-panel
     position relative
+    iframe
+      width 100%
   .contact-tile
     padding 9px 4px 9px 11px
     top 57px
@@ -463,4 +504,34 @@
   @media (max-width: 320px)
     .map-icon
       display none!important
+  .entry-content
+    font-family roboto , sans-serif
+
+
+  .entry-content li
+    list-style none
+
+
+  .entry-content a
+    text-decoration none
+    color #2199e8
+    text-decoration none
+    line-height inherit
+    cursor pointer
+    font-size 2rem
+
+  .entry-header
+    display none
+
+  .wp-block-latest-posts__post-author
+    margin-top 8px
+    margin-bottom 5px
+    font-size 0.94rem
+
+  .wp-block-latest-posts__post-full-content
+    margin-top 15px
+    font-size 1.12rem
+
+  time.wp-block-latest-posts__post-date
+    font-size 0.7rem
 </style>

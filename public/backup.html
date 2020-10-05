@@ -1,0 +1,43 @@
+<?php
+/**
+ * Header file for the Twenty Twenty WordPress default theme.
+ *
+ * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
+ *
+ * @package WordPress
+ * @subpackage Twenty_Twenty
+ * @since Twenty Twenty 1.0
+ */
+
+?>
+<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=icon href=/favicon.ico><title>prototype</title><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css><link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel=stylesheet><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Rancho&effect=fire-animation|anaglyph|fire|3d|vintage"><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Monoton&effect=neon|anaglyph|fire|3d|vintage"><link href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css rel=stylesheet><link rel="stylesheet" href="http://wgptenpin.co.nz/wp-content/themes/twentytwenty/css/app.6088aeba.css" type="text/css">
+    <link rel="stylesheet" href="http://wgptenpin.co.nz/wp-content/themes/twentytwenty/css/chunk-vendors.e16c4eeb.css" type="text/css"></head><body><noscript><strong>We're sorry but prototype doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript>
+<div class="wrap">
+    <div id="primary" class="content-area">
+        <main id="main" class="site-main" role="main">
+            <div id=app>
+            </div>
+            <div class="width-1440 container">
+                <?php
+
+	if ( have_posts() ) {
+
+		while ( have_posts() ) {
+			the_post();
+
+			get_template_part( 'template-parts/content-cover' );
+		}
+	}
+
+	?>
+            </div>
+
+            <div id=footer></div>
+
+
+        </main><!-- #main -->
+    </div><!-- #primary -->
+</div><!-- .wrap -->
+
+
+<script src="http://wgptenpin.co.nz/wp-content/themes/twentytwenty/js/app.eb3f9ca8.js"></script><script src="http://wgptenpin.co.nz/wp-content/themes/twentytwenty/js/chunk-vendors.50d9d427.js"></script></body></html>

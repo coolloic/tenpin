@@ -1,6 +1,14 @@
 <template lang="pug">
-  v-form(ref="form" v-model="valid" lazy-validation)
+  v-form(ref="form" v-model="valid" lazy-validation method="post" action="/#wpcf7-f68-p2-o1")
+    .hidden
+      input(type="hidden" name="_wpcf7" value="68")
+      input(type="hidden" name="_wpcf7_version" value="5.2.2")
+      input(type="hidden" name="_wpcf7_locale" value="en_US")
+      input(type="hidden" name="_wpcf7_unit_tag" value="wpcf7-f68-p2-o1")
+      input(type="hidden" name="_wpcf7_container_post" value="2")
+      input(type="hidden" name="_wpcf7_posted_data_hash" value="")
     v-text-field(
+      name="your-name"
       v-model="name"
       :counter="30"
       :rules="nameRules"
@@ -8,19 +16,26 @@
       prepend-icon="person"
       required)
     v-text-field(
+      name="your-email"
       v-model="email"
       :rules="emailRules"
       label="E-mail"
       prepend-icon="email"
       required)
-    v-select(
-      v-model="select"
-      :items="items"
-      prepend-icon="cake"
-      :rules="[v => !!v || 'Item is required']"
-      label="Event"
+    v-text-field(
+      name="your-phone"
+      v-model="phone"
+      label="Phone"
+      prepend-icon="phone"
       required)
-    v-menu(
+    v-text-field(
+      type="number"
+      name="people"
+      v-model="people"
+      label="Number of People"
+      prepend-icon="people"
+      required)
+    v-menu.hidden(
       ref="menu1"
       v-model="menu1"
       :close-on-content-click="false"
@@ -30,6 +45,7 @@
       min-width="290px")
       template(v-slot:activator="{ on, attrs }")
         v-text-field(
+          name="date"
           v-model="dateFormatted"
           label="Date"
           hint="MM/DD/YYYY"
@@ -40,18 +56,15 @@
           @blur="date = parseDate(dateFormatted)"
           v-on="on")
       v-date-picker(v-model="date" no-title @input="menu1 = false")
-    v-textarea.mt-1(outlined label="Comment" dense hide-details)
-    v-checkbox(
-      v-model="checkbox"
-      :rules="[v => !!v || 'You must agree to continue!']"
-      label="Subscribe to get promotion information?")
-    v-btn.mr-2(
+    v-textarea.mt-1(outlined label="Comment" dense hide-details name="your-message")
+    v-btn.mr-2.mt-2(
       :disabled="!valid"
       color="success"
       @click="validate") Booking
-    v-btn(
+    v-btn.mt-2(
       color="error"
       @click="reset") Reset
+    v-btn#submit.hidden(type="submit") submit
 
 </template>
 
@@ -65,12 +78,14 @@
       date: new Date().toISOString().substr(0, 10),
       dateFormatted: vm.formatDate(new Date().toISOString().substr(0, 10)),
       menu1: false,
-      valid: true,
+      valid: false,
       name: '',
       nameRules: [
         (v: any) => !!v || 'Name is required',
-        (v: any) => (v && v.length <= 10) || 'Name must be less than 10 characters',
+        (v: any) => (v && v.length <= 30) || 'Name must be less than 30 characters',
       ],
+      people: 1,
+      phone: '',
       email: '',
       emailRules: [
         (v: any) => !!v || 'E-mail is required',
@@ -87,16 +102,23 @@
     }),
     watch: {
       date(val) {
+        //@ts-ignore
         this.dateFormatted = this.formatDate(this.date)
       },
     },
 
     methods: {
       validate() {
-        this.$refs.form.validate();
-        this.bookingFn && this.bookingFn();
+        //@ts-ignore
+        const valid = this.$refs.form.validate();
+        if(valid){
+          //@ts-ignore
+          this.bookingFn && this.bookingFn();
+          document.getElementById("submit")!.click();
+        }
       },
       reset() {
+        //@ts-ignore
         this.$refs.form.reset()
       },
       formatDate(date): string | null {
@@ -114,8 +136,15 @@
     },
     computed: {
       computedDateFormatted() {
+        //@ts-ignore
         return this.formatDate(this.date)
       },
     }
   });
 </script>
+<style lang="stylus">
+  .hidden
+    display none!important
+  .wpcf7
+    display none!important
+</style>

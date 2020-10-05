@@ -4,7 +4,8 @@
           v-col
             v-card
               v-toolbar.light-blue(flat dark)
-                v-toolbar-title Special Deals
+                v-toolbar-title Birthday Party
+                  .subtitle-2.text--secondary Party room are free to use with booking. We only provide table cloths. You can bring your food and soft drinks. Also, you are welcome to decorate the party room.
               v-tabs.event-tabs(show-arrows=false style="min-width: 100%")
                 v-tab.blue--text.darken-5.event-tab(v-for="(item,i) in items" :key="i") {{item.title}}
                   v-icon.ml-2.blue--text.darken-5(left) {{item.icon}}
@@ -20,8 +21,8 @@
                             label.price-label.black--text {{item.price}}
                           v-divider.mt-2.mb-2
                           v-list.stripe
-                            v-list-item.ma-0.pa-0.border-bt(v-for="(item,i) in item.content" :key="i")
-                              v-list-item-content.pa-0.bold {{item}}
+                            v-list-item.ma-0.border-bt(v-for="(item,i) in item.content" :key="i")
+                              v-list-item-content.pl-1.bold.bullet-item(v-html="item")
                               v-list-item-action
                                 v-icon.orange--text star
                           v-spacer
@@ -39,13 +40,13 @@
     data: () => ({
       items: [{
         icon: 'cake',
-        title: 'Tenpin Bowling Party',
-        content: ['$16 - 1 Game Deal per Child', '$20 - 2 Game Deal per Child', 'Combo 1: Mini hotdogs + chips', 'Combo 2: Chicken nuggets + chips', 'We supply table cloths, and the free party room is available', 'All children will receive a free game voucher!'],
+        title: 'Bowling + Food',
+        content: ['1 Game - $16 per Child', '2 Games - $22 per child', 'Food Option: <ol><li>Mini Hotdogs</li><li>Chicken Nuggets</li><li>Vegetable Spring Rolls</li><li>Samosas</li></ol><b>(Choose One) + Chips  Per Child</b>'],
         price: ''
       }, {
         icon: 'cake',
-        title: 'Tenpin Bowling PIZZA',
-        content: ['$16 - 1 Game Deal per Child', '$20 - 2 Game Deal per Child', 'Combo 1: Mini hotdogs + chips', 'Combo 2: Chicken nuggets + chips', 'We supply table cloths, and the free party room is available', 'All children will receive a free game voucher!'],
+        title: 'Games Only',
+        content: ['1 Game - $6 per Child (Under 5) or $9 per Child (Under 13)', '2 Games -  $12 per Child (Under 5) or $15 per Child (Under 13)'],
         price: ''
       }],
       window: 0
@@ -101,4 +102,6 @@
       max-width 100%
     .event-title
       margin-bottom 4px
+  .bullet-item li
+    margin 6px 0
 </style>
