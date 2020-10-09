@@ -4,7 +4,7 @@
           v-col
             v-card
               v-toolbar.primary(flat dark)
-                v-toolbar-title Birthday Party
+                v-toolbar-title.bold Birthday Party
                   .subtitle-2.birth-label Party room are free to use with booking. We only provide table cloths. You can bring your food and soft drinks. Also, you are welcome to decorate the party room.
               v-tabs.event-tabs(show-arrows=false style="min-width: 100%")
                 v-tab.blue--text.darken-5.event-tab(v-for="(item,i) in items" :key="i") {{item.title}}

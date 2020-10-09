@@ -1,5 +1,24 @@
 <template lang="html">
-
+  <form action="/#wpcf7-f68-p2-o1" method="post" class="wpcf7-form init" novalidate="novalidate">
+    <div style="display: none;">
+      <input type="hidden" name="_wpcf7" value="68">
+      <input type="hidden" name="_wpcf7_version" value="5.2.2">
+      <input type="hidden" name="_wpcf7_locale" value="en_US">
+      <input type="hidden" name="_wpcf7_unit_tag" value="wpcf7-f68-p2-o1">
+      <input type="hidden" name="_wpcf7_container_post" value="2">
+      <input type="hidden" name="_wpcf7_posted_data_hash" value="">
+    </div>
+    <p><label> Your Name (required)<br>
+      <span class="wpcf7-form-control-wrap your-name"><input type="text" name="your-name" value="" size="40" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required" aria-required="true" aria-invalid="false"></span> </label></p>
+    <p><label>Phone (required) <span class="wpcf7-form-control-wrap your-phone"><input type="text" name="your-phone" value="" size="40" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required" aria-required="true" aria-invalid="false"></span></label></p>
+    <p><label> Number of People (required)<br><span class="wpcf7-form-control-wrap people"><input type="number" name="people" value="" class="wpcf7-form-control wpcf7-number wpcf7-validates-as-number" min="1" max="100" aria-invalid="false"></span></label></p>
+    <p><label> Your Email (required)<br>
+      <span class="wpcf7-form-control-wrap your-email"><input type="email" name="your-email" value="" size="40" class="wpcf7-form-control wpcf7-text wpcf7-email wpcf7-validates-as-required wpcf7-validates-as-email" aria-required="true" aria-invalid="false"></span> </label></p>
+    <p><label> Date (required)<br><span class="wpcf7-form-control-wrap date"><input type="date" name="date" value="" class="wpcf7-form-control wpcf7-date wpcf7-validates-as-date" aria-invalid="false"></span></label></p>
+    <p><label> Your Message<br>
+      <span class="wpcf7-form-control-wrap your-message"><textarea name="your-message" cols="40" rows="10" class="wpcf7-form-control wpcf7-textarea" aria-invalid="false"></textarea></span> </label></p>
+    <p><input type="submit" value="Send" class="wpcf7-form-control wpcf7-submit"></p>
+    <div class="wpcf7-response-output" role="alert" aria-hidden="true"></div></form>
 </template>
 
 <script lang="ts">

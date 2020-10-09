@@ -14,7 +14,7 @@
     v-dialog#contact(v-model="dialog" max-width="600px")
       v-card
         v-card-title.headline.grey.lighten-3 Make a Booking
-        v-card-text.pa-2: booking
+        v-card-text.pa-2: raw-booking
 
   mixin app-bar
     v-app-bar.sticky-app-bar.app-bar(outlined fixed)
@@ -111,9 +111,9 @@
       carousel#home
       .width-1440
         +scope-tile
-        event-tile#cake(@click="dialog = !dialog")
         +price-tiles
         +calculator
+        event-tile#cake(@click="dialog = !dialog")
         +price-tiles-2
         .container#contact_mail
           v-card.contact-panel
@@ -447,9 +447,11 @@
   };
 </script>
 <style lang="stylus">
-  .price-header
+  button.v-expansion-panel-header.primary.theme--light.price-header
+    padding 4px 16px
     h3,i
       color #fff!important
+      font-size 1.25rem
   .contact-panel
     position relative
     iframe

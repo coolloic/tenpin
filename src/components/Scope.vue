@@ -31,7 +31,7 @@
         title: 'Birthday Party',
         src: require('../assets/party.svg')
       }, {
-        title: 'Business',
+        title: 'Function',
         src: require('../assets/business.svg')
       }, {
         title: 'Fully Licensed',
