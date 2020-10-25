@@ -15,6 +15,7 @@
     <p><label> Your Email (required)<br>
       <span class="wpcf7-form-control-wrap your-email"><input type="email" name="your-email" value="" size="40" class="wpcf7-form-control wpcf7-text wpcf7-email wpcf7-validates-as-required wpcf7-validates-as-email" aria-required="true" aria-invalid="false"></span> </label></p>
     <p><label> Date (required)<br><span class="wpcf7-form-control-wrap date"><input type="date" name="date" value="" class="wpcf7-form-control wpcf7-date wpcf7-validates-as-date" aria-invalid="false"></span></label></p>
+    <p><label> Time (10am - 10pm) (required)<br><span class="wpcf7-form-control-wrap time"><input type="time" name="time" value="" class="wpcf7-form-control wpcf7-date wpcf7-validates-as-time" aria-invalid="false"></span></label></p>
     <p><label> Your Message<br>
       <span class="wpcf7-form-control-wrap your-message"><textarea name="your-message" cols="40" rows="10" class="wpcf7-form-control wpcf7-textarea" aria-invalid="false"></textarea></span> </label></p>
     <p><input type="submit" value="Send" class="wpcf7-form-control wpcf7-submit"></p>
