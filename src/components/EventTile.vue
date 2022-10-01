@@ -41,12 +41,7 @@
       items: [{
         icon: 'cake',
         title: 'Bowling + Food',
-        content: ['1 Game - $16 per Child', '2 Games - $22 per child', 'Food Option: <ol><li>Mini Hotdogs</li><li>Chicken Nuggets</li><li>Vegetable Spring Rolls</li><li>Samosas</li></ol><b>(Choose One) + Chips  Per Child</b>','All paid children will receive a free game voucher which can be used on next visit.'],
-        price: ''
-      }, {
-        icon: 'cake',
-        title: 'Games Only',
-        content: ['1 Game - $6 per Child (Under 5) or $9 per Child (Under 13)', '2 Games -  $12 per Child (Under 5) or $15 per Child (Under 13)'],
+        content: ['1 Game - $22 per Child', '2 Games - $28 per child', 'Food Option: <ol><li>Mini Hotdogs</li><li>Chicken Nuggets</li></ol><b>(Choose One) + Chips  Per Child</b>'],
         price: ''
       }],
       window: 0
