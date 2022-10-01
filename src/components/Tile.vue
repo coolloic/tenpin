@@ -10,7 +10,7 @@
         v-list-item.pa-2.table-item(v-for="(item,i) in content" :key="i")
           v-list-item-content.price-field.pt-0.pb-0(v-html="item.field")
           v-list-item-content(v-if="item.price").align-end.pt-0.pb-0.orange--text.price-label
-            v-chip(x-large label color="orange" outlined) {{item.price}}
+            v-chip(x-large label text-color="black" color="black" outlined).font-weight-bold {{item.price}}
     v-card-actions
       v-spacer
       v-btn.primary.booking-btn(text color="white" outlined @click="click" x-large :class="!hideBtn ? '' : 'invisible'") Booking

@@ -6,7 +6,7 @@
     .super_tile__img
       img(:src="img")
     .super_tile__caption
-      .super_tile__caption__heading(v-if="heading" )
+      .super_tile__caption__heading.font-effect-fire.align-content-end(v-if="heading" )
         h3 {{heading}}
       .super_tile__caption__content(v-if="content" )
         p {{content}}
@@ -98,7 +98,7 @@ export default Vue.extend({
 
   .super_tile__img img {
     display: block;
-    width: 100%;
+    width 100%
     object-fit: cover;
   }
 
@@ -107,11 +107,19 @@ export default Vue.extend({
     bottom: 0;
     left: 0;
     color: #fff;
-    padding: 30px;
+    padding: 30pxs;
+    width 100%
+    .super_tile__caption__heading {
+      display block
+      text-align right
+    }
 
     .super_tile__caption__heading h3 {
-      font-size: 30px;
+      font-size: 4rem;
       color: #fff;
+      display inline-block
+      padding 20px
+      border-radius 50%
     }
 
     .super_tile__caption__content p {
@@ -167,23 +175,23 @@ export default Vue.extend({
   }
 }
 
-@media (max-width: 1024px) {
-  .super-tile-component [class^="col-lg-"] {
-    margin-bottom: 15px;
-    padding: 0 8px;
-  }
-
-  .super-tile {
-    height: auto;
-
-    .super_tile__caption {
-      padding: 15px;
-
-      .super_tile__caption__link:after {
-        opacity: 0;
-        padding-right: 10px;
-      }
-    }
-  }
-}
+//@media (max-width: 1024px) {
+//  .super-tile-component [class^="col-lg-"] {
+//    margin-bottom: 15px;
+//    padding: 0 8px;
+//  }
+//
+//  .super-tile {
+//    height: auto;
+//
+//    .super_tile__caption {
+//      padding: 15px;
+//
+//      .super_tile__caption__link:after {
+//        opacity: 0;
+//        padding-right: 10px;
+//      }
+//    }
+//  }
+//}
 </style>

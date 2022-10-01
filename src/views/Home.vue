@@ -119,9 +119,9 @@
           h3 FAST FOOD MENU
           p If you suffer from  any allergies or are unsure about the ingredients quantity of our products, please ask a member of staff to  assist
       v-row(cols="12")
-        v-col(lg="4" md="4" sm="6" v-for="(item,i) in foods")
+        v-col(cols="12" lg="4" md="12" sm="12" v-for="(item,i) in foods")
           image-badge(v-bind="item" :id="i")
-        v-col(lg="6" md="6" sm="6" v-for="(item,i) in foods1")
+        v-col(cols="12" lg="6" md="12" sm="12" v-for="(item,i) in foods1")
           image-badge(v-bind="item" :id="i")
         v-col(cols="12" v-for="(item,i) in foods2")
           image-badge(v-bind="item" :id="i")
@@ -710,11 +710,13 @@ header.primary-header
   align-items center
   flex-wrap wrap
   display flex
+  h3
+    display block
+    width 100%
   &.orange
     background black!important
     color orange
-  h3
-    margin-top 14px
-    display block
-    width 100%
+    h3
+      margin-top 14px
+
 </style>
