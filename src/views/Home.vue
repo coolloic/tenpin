@@ -111,6 +111,20 @@
     v-container#fiber_new
       v-row(cols="12"): v-col(cols="12"): v-card
         scope(height="400" :img="require('../assets/material2.jpg')")
+
+  mixin food-section
+    v-container#fast_food
+      v-row(cols="12"): v-col(cols="12")
+        header.primary-header.orange
+          h3 FAST FOOD MENU
+          p If you suffer from  any allergies or are unsure about the ingredients quantity of our products, please ask a member of staff to  assist
+      v-row(cols="12")
+        v-col(lg="4" md="4" sm="6" v-for="(item,i) in foods")
+          image-badge(v-bind="item" :id="i")
+        v-col(lg="6" md="6" sm="6" v-for="(item,i) in foods1")
+          image-badge(v-bind="item" :id="i")
+        v-col(cols="12" v-for="(item,i) in foods2")
+          image-badge(v-bind="item" :id="i")
   v-app#inspire
     +system-bar
     +app-bar
@@ -122,9 +136,10 @@
         +scope-tile
         +price-tiles
         +price-tiles-1
-        +calculator
+        //+calculator
         event-tile#cake(@click="dialog = !dialog")
         +price-tiles-2
+        +food-section
         team#people
         .container#contact_mail
           v-card.contact-panel
@@ -143,10 +158,12 @@ import Cart from '@/components/Cart';
 import RawBooking from '@/components/RawBooking';
 import Scope from '@/components/Scope';
 import Team from "@/components/Team";
+import ImageBadge from "@/components/ImageBadge";
 
 export default {
   name: 'home',
   components: {
+    ImageBadge,
     Carousel,
     TFooter,
     Tile,
@@ -163,6 +180,51 @@ export default {
       totalPrice: 0,
       logo: require('../assets/logo_v.jpg'),
       simpleLogo: require('../assets/logo-icon.png'),
+      foods2: [{
+        title: 'Family Fun Pack (2 Hot Chips, 3 Hot Dogs, 6 Chicken Nuggets, 6 Spring Rolls)',
+        heading: "$24",
+        img: require('../assets/food_family_pack.jpeg')
+      }],
+      foods1: [{
+        title: '5 Nuggets + Chips',
+        heading: "$11",
+        img: require('../assets/food_nuggets_chips.jpeg')
+      }, {
+        title: '3 Hot Dogs + Chips',
+        heading: "$11",
+        img: require('../assets/food_hot_dogs_chips.jpeg')
+      }, {
+        title: '12 Samosas + Chips',
+        heading: "$11",
+        img: require('../assets/food_samosas_chips.jpeg')
+      }, {
+        title: '10 Spring Roll + Chips',
+        heading: "$11",
+        img: require('../assets/food_rolls_chips.jpeg')
+      }],
+      foods: [{
+        title: 'Hot Chips',
+        heading: "$5",
+        img: require('../assets/food_chips.jpeg')
+      }, {
+        title: '10 Chicken Nuggets',
+        heading: "$8",
+        img: require('../assets/food_nuggets.jpeg')
+      }, {
+        title: '12 Spring Roll',
+        heading: "$8",
+        img: require('../assets/food_rolls.jpeg')
+      }, {
+        title: '3 Hot Dogs',
+        heading: "$8",
+        img: require('../assets/food_hot_dogs.jpeg')
+      }, {
+        title: 'Wedges',
+        heading: "$7",
+        img: require('../assets/food_wedges.jpeg')
+      },
+        {title: '12 Samosas', heading: "$8", img: require('../assets/food_samosas.jpeg')},
+      ],
       pricesData: [{
         img: require('../assets/bowling_1.jpg'),
         title: 'Monday-Thursday All day & Friday 10am-5pm Bowling',
@@ -350,25 +412,27 @@ export default {
       }, {
         icon: 'fiber_new',
         name: `What's on`,
-      }, {
-        icon: 'monetization_on',
-        name: 'Price Calculator',
-      }, {
-        icon: 'cake',
-        name: 'Birthday Party',
-      }, {
-        icon: 'extension',
-        name: 'Tournaments',
-      }, {
-        icon: 'assignment_turned_in',
-        name: 'Make a booking',
-      }, {
-        icon: 'people',
-        name: 'Team'
-      }, {
-        icon: 'contact_mail',
-        name: 'Contact Us',
-      }],
+      },
+        //   {
+        //   icon: 'monetization_on',
+        //   name: 'Price Calculator',
+        // },
+        {
+          icon: 'cake',
+          name: 'Birthday Party',
+        }, {
+          icon: 'extension',
+          name: 'Tournaments',
+        }, {
+          icon: 'assignment_turned_in',
+          name: 'Make a booking',
+        }, {
+          icon: 'people',
+          name: 'Team'
+        }, {
+          icon: 'contact_mail',
+          name: 'Contact Us',
+        }],
       priceTiles: [{
         img: require('../assets/bowling_3.jpg'),
         price: 13,
@@ -644,5 +708,13 @@ header.primary-header
   min-height 60px
   border-radius 5px
   align-items center
+  flex-wrap wrap
   display flex
+  &.orange
+    background black!important
+    color orange
+  h3
+    margin-top 14px
+    display block
+    width 100%
 </style>
