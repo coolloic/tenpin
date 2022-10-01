@@ -113,7 +113,7 @@
         scope(height="400" :img="require('../assets/material2.jpg')")
 
   mixin food-section
-    v-container#fast_food
+    v-container#local_cafe
       v-row(cols="12"): v-col(cols="12")
         header.primary-header.orange
           h3 FAST FOOD MENU
@@ -413,10 +413,6 @@ export default {
         icon: 'fiber_new',
         name: `What's on`,
       },
-        //   {
-        //   icon: 'monetization_on',
-        //   name: 'Price Calculator',
-        // },
         {
           icon: 'cake',
           name: 'Birthday Party',
@@ -424,9 +420,13 @@ export default {
           icon: 'extension',
           name: 'Tournaments',
         }, {
+          icon: 'local_cafe',
+          name: 'Foods',
+        }, {
           icon: 'assignment_turned_in',
           name: 'Make a booking',
-        }, {
+        },
+        {
           icon: 'people',
           name: 'Team'
         }, {
@@ -710,12 +710,15 @@ header.primary-header
   align-items center
   flex-wrap wrap
   display flex
+
   h3
     display block
     width 100%
+
   &.orange
-    background black!important
+    background black !important
     color orange
+
     h3
       margin-top 14px
 
